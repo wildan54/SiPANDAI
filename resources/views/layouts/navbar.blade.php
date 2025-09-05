@@ -13,26 +13,37 @@
     </li>
   </ul>
 
-  <!-- Right navbar -->
+  <!-- Right navbar (User Info) -->
   <ul class="navbar-nav ml-auto">
-    <!-- User Dropdown -->
     <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
-        <i class="fas fa-user mr-1"></i>
-        <span class="d-none d-sm-inline">{{ Auth::user()->name }}</span>
-        <i class="fas fa-caret-down ml-1"></i>
+      <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#">
+        <!-- Avatar -->
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+             class="rounded-circle mr-2" 
+             alt="User Avatar" 
+             width="32" height="32">
+        <!-- Info -->
+        <div class="d-none d-md-block text-left" style="line-height: 1.2;">
+          <span class="font-weight-bold">{{ Auth::user()->name }}</span><br>
+          <small class="text-muted">Administrator</small>
+        </div>
+        <i class="fas fa-caret-down ml-2"></i>
       </a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <a href="{{ route('profile.edit') }}" class="dropdown-item">
-          <i class="fas fa-user-cog mr-2"></i> Profile
-        </a>
+
+      <!-- Dropdown Profile Card -->
+      <div class="dropdown-menu dropdown-menu-right p-3" style="min-width: 250px;">
+        <div class="text-center">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+               class="rounded-circle mb-2" 
+               alt="User Avatar" 
+               width="64" height="64">
+          <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+          <small class="text-muted">Administrator</small>
+        </div>
         <div class="dropdown-divider"></div>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="dropdown-item">
-            <i class="fas fa-sign-out-alt mr-2"></i> Log Out
-          </button>
-        </form>
+        <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm btn-block">
+          <i class="fas fa-user-cog mr-1"></i> Profile
+        </a>
       </div>
     </li>
   </ul>

@@ -11,7 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // daftar middleware untuk route web
+        $middleware->web([
+            \App\Http\Middleware\UpdateLastActive::class,
+        ]);
+
+        // kalau mau untuk api juga bisa:
+        // $middleware->api([
+        //     \App\Http\Middleware\UpdateLastActive::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id(); // id sebagai primary key default Laravel
             $table->string('name', 100);
-            $table->string('username', 50)->unique();
+            $table->string('username', 50)->unique()->nullable();
             $table->string('email', 100)->unique();
             $table->string('password', 255);
             $table->dateTime('last_active')->nullable();

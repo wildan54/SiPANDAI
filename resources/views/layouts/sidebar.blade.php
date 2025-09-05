@@ -1,6 +1,19 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-  <div class="sidebar">
-    <nav class="mt-2">
+
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column">
+    <!-- Sapaan -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="info">
+        <span class="d-block text-white">
+          Selamat datang di <br>
+          <strong>Dashboard SiPANDAI</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2 flex-grow-1">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
         <li class="nav-item">
           <a href="{{ route('dashboard') }}" class="nav-link">
@@ -44,5 +57,23 @@
         </li>
       </ul>
     </nav>
+
+    <!-- Tombol Logout (paling bawah sidebar) -->
+    <ul class="nav nav-pills nav-sidebar flex-column mt-auto" role="menu">
+    <li class="nav-item">
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" 
+          class="nav-link d-flex align-items-center text-white" 
+          style="background-color: #dc3545; border: none; width: 100%;">
+          <i class="nav-icon fas fa-sign-out-alt text-white"></i>
+          <p class="d-none d-sm-inline text-white">Logout</p>
+        </button>
+      </form>
+    </li>
+  </ul>
+
+
   </div>
+  <!-- /.sidebar -->
 </aside>

@@ -5,10 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\BidangController;
-use App\Http\Controllers\DocumentCategoryController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\UserController;
-use Mews\Captcha\Captcha;
+use App\Http\Controllers\DocumentCategoryController;
 
 Route::get('/', function () {
     return view('welcome');
