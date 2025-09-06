@@ -1,34 +1,43 @@
 @extends('layouts.app')
 
-@section('title', 'SiPANDAI - Bidang')
+@section('title', 'SiPANDAI - Tipe Dokumen')
 
 @section('content')
-<section id="bidang" class="content">
+<section id="tipe-dokumen" class="content">
   <div class="container-fluid">
     <div class="row">
-      <!-- Form Tambah Bidang -->
+      <!-- Form Tambah Tipe Dokumen -->
       <div class="col-md-4">
         <div class="card border-success">
           <div class="card-header bg-success text-white">
-            Tambah Bidang
+            Tambah Tipe Dokumen
           </div>
-          <form action="{{ route('bidang.store') }}" method="POST">
+          <form action="{{ route('documents.types.store') }}" method="POST">
             @csrf
             <div class="card-body">
               <div class="form-group">
-                <label for="name">Nama<span class="text-danger">*</span></label>
-                <input type="text" name="name" id="name" class="form-control" placeholder="Nama bidang" required>
+                <label for="name">Nama <span class="text-danger">*</span></label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="Nama tipe dokumen" required>
               </div>
               <div class="form-group">
                 <label for="slug">Slug <span class="text-danger">*</span></label>
-                <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-bidang" required>
+                <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-tipe" required>
                 <small class="form-text text-muted">
                   “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung.
                 </small>
               </div>
               <div class="form-group">
                 <label for="description">Deskripsi</label>
-                <textarea name="description" id="description" rows="3" class="form-control" placeholder="Deskripsi bidang"></textarea>
+                <textarea name="description" id="description" rows="3" class="form-control" placeholder="Deskripsi tipe dokumen"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="document_category_id">Kategori Dokumen</label>
+                <select name="document_category_id" id="document_category_id" class="form-control">
+                  <option value="">-- Pilih Kategori --</option>
+                  @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
             <div class="card-footer">
@@ -38,11 +47,11 @@
         </div>
       </div>
 
-      <!-- Tabel Bidang -->
+      <!-- Tabel Tipe Dokumen -->
       <div class="col-md-8">
         <div class="card border-primary">
           <div class="card-header bg-success text-white">
-              Daftar Bidang
+              Daftar Tipe Dokumen
           </div>
           <div class="card-body">
             <table class="table table-striped table-bordered table-hover data-table">
@@ -50,35 +59,40 @@
                   <tr>
                       <th>No</th>
                       <th>Nama</th>
-                      <th>Deskripsi</th>
                       <th>Slug</th>
+                      <th>Deskripsi</th>
+                      <th>Kategori</th>
                       <th>Dibuat</th>
                       <th>Aksi</th>
                   </tr>
               </thead>
               <tbody>
-                  @foreach ($units as $unit)
+                  @foreach ($types as $type)
                   <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $unit->name }}</td>
-                      <td>{{ $unit->description }}</td>
-                      <td>{{ $unit->slug }}</td>
-                      <td>{{ $unit->created_at->format('d-m-Y') }}</td>
+                      <td>{{ $type->name }}</td>
+                      <td>{{ $type->slug }}</td>
+                      <td>{{ $type->description ?? '—' }}</td>
+                      <td>{{ $type->category->name ?? '—' }}</td>
+                      <td>{{ $type->created_at->format('d-m-Y') }}</td>
                       <td>
                           <a href="#" class="btn btn-sm btn-info">Edit</a>
-                          <form action="{{ route('bidang.destroy', $unit->id) }}" method="POST" class="d-inline">
+                          <form action="{{ route('documents.types.destroy', $type->id) }}" method="POST" class="d-inline">
                               @csrf
                               @method('DELETE')
-                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus bidang ini?')">
+                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus tipe dokumen ini?')">
                                   Hapus
                               </button>
                           </form>
                       </td>
                   </tr>
-                @endforeach
+                  @endforeach
               </tbody>
-              
             </table>
+
+            <p class="mt-3 text-muted">
+              Menghapus tipe dokumen tidak menghapus dokumen yang terkait.
+            </p>
           </div>
         </div>
       </div>
