@@ -14,7 +14,7 @@ class DocumentCategoryController extends Controller
     public function index()
     {
         $categories = DocumentCategory::withCount('documents')->latest()->get();
-        return view('documents.categories', compact('categories'));
+        return view('documents.category.categories', compact('categories'));
     }
 
     /**
@@ -34,43 +34,42 @@ class DocumentCategoryController extends Controller
             'slug'        => $request->slug ?? Str::slug($request->name),
         ]);
 
-        return redirect()->route('documents.categories')->with('success', 'Kategori berhasil ditambahkan.');
+        return redirect()
+            ->route('documents.category.categories')
+            ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     /**
-     * Tampilkan form edit kategori.
+     * Update kategori (pakai modal edit).
      */
-    public function edit(DocumentCategory $kategori)
-    {
-        return view('documents.categories', compact('kategori'));
-    }
-
-    /**
-     * Update kategori.
-     */
-    public function update(Request $request, DocumentCategory $kategori)
+    public function update(Request $request, DocumentCategory $category)
     {
         $request->validate([
-            'name'        => 'required|string|max:100|unique:document_categories,name,' . $kategori->id,
-            'slug'        => 'nullable|string|max:255|unique:document_categories,slug,' . $kategori->id,
+            'name'        => 'required|string|max:100|unique:document_categories,name,' . $category->id,
+            'slug'        => 'nullable|string|max:255|unique:document_categories,slug,' . $category->id,
             'description' => 'nullable|string',
         ]);
 
-        $kategori->update([
+        $category->update([
             'name'        => $request->name,
             'description' => $request->description,
             'slug'        => $request->slug ?? Str::slug($request->name),
         ]);
 
-        return redirect()->route('documents.categories')->with('success', 'Kategori berhasil diperbarui.');
+        return redirect()
+            ->route('documents.category.categories')
+            ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     /**
      * Hapus kategori.
      */
-    public function destroy(DocumentCategory $kategori)
+    public function destroy(DocumentCategory $category)
     {
-        $kategori->delete();
-        return redirect()->route('documents.categories')->with('success', 'Kategori berhasil dihapus.');
+        $category->delete();
+
+        return redirect()
+            ->route('documents.category.categories')
+            ->with('success', 'Kategori berhasil dihapus.');
     }
 }

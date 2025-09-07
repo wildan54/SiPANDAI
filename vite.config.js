@@ -8,4 +8,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+    host: 'sipandai.test',
+    port: 5173,
+    hmr: {
+            host: 'sipandai.test',
+        },
+    },
+
 });
+
+

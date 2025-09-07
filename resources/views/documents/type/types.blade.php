@@ -21,7 +21,7 @@
               </div>
               <div class="form-group">
                 <label for="slug">Slug <span class="text-danger">*</span></label>
-                <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-tipe" required>
+                <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-tipe">
                 <small class="form-text text-muted">
                   “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung.
                 </small>
@@ -72,11 +72,16 @@
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $type->name }}</td>
                       <td>{{ $type->slug }}</td>
-                      <td>{{ $type->description ?? '—' }}</td>
+                      <td data-tippy-content="{{ $type->description }}">
+                        {{ \Illuminate\Support\Str::words($type->description ?? '—', 8, '...') }}
+                      </td>
                       <td>{{ $type->category->name ?? '—' }}</td>
                       <td>{{ $type->created_at->format('d-m-Y') }}</td>
                       <td>
-                          <a href="#" class="btn btn-sm btn-info">Edit</a>
+                          <!-- Tombol Edit -->
+                          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $type->id }}">
+                            Edit
+                          </button>
                           <form action="{{ route('documents.types.destroy', $type->id) }}" method="POST" class="d-inline">
                               @csrf
                               @method('DELETE')
@@ -99,4 +104,6 @@
     </div>
   </div>
 </section>
+
+@include('documents.type.modal_edit')
 @endsection

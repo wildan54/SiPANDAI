@@ -31,8 +31,8 @@
           <ul class="nav nav-treeview">
             <li class="nav-item"><a href="{{ route('documents.index') }}" class="nav-link"><i class="far fa-circle nav-icon"></i> Semua Dokumen</a></li>
             <li class="nav-item"><a href="{{ route('documents.create') }}" class="nav-link"><i class="far fa-circle nav-icon"></i> Tambah Dokumen</a></li>
-            <li class="nav-item"><a href="{{ route('documents.categories') }}" class="nav-link"><i class="far fa-circle nav-icon"></i> Kategori Dokumen</a></li>
-            <li class="nav-item"><a href="{{ route('documents.types') }}" class="nav-link"><i class="far fa-circle nav-icon"></i> Tipe Dokumen</a></li>
+            <li class="nav-item"><a href="{{ route('documents.category.categories') }}" class="nav-link"><i class="far fa-circle nav-icon"></i> Kategori Dokumen</a></li>
+            <li class="nav-item"><a href="{{ route('documents.type.types') }}" class="nav-link"><i class="far fa-circle nav-icon"></i> Tipe Dokumen</a></li>
           </ul>
         </li>
 

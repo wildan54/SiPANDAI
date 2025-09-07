@@ -8,8 +8,8 @@
     <div class="row">
       <!-- Form Tambah Kategori -->
       <div class="col-md-4">
-        <div class="card border-success">
-          <div class="card-header bg-success text-white">
+        <div class="card border-primary">
+          <div class="card-header bg-primary text-white">
             Tambah Kategori
           </div>
           <form action="{{ route('documents.categories.store') }}" method="POST">
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="card-footer">
-              <button type="submit" class="btn btn-success btn-block">Tambah</button>
+              <button type="submit" class="btn btn-primary btn-block">Tambah</button>
             </div>
           </form>
         </div>
@@ -41,7 +41,7 @@
       <!-- Tabel Kategori -->
       <div class="col-md-8">
         <div class="card border-primary">
-          <div class="card-header bg-success text-white">
+          <div class="card-header bg-primary text-white">
               Daftar Kategori
           </div>
           <div class="card-body">
@@ -62,12 +62,19 @@
                   <tr>
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $category->name }}</td>
-                      <td>{{ $category->description ?? '—' }}</td>
+                      <td data-tippy-content="{{ $category->description ?? '—' }}">
+                        {{ \Illuminate\Support\Str::words($category->description ?? '—', 5, '...') }}
+                      </td>
                       <td>{{ $category->slug }}</td>
                       <td>{{ $category->documents_count ?? 0 }}</td>
                       <td>{{ $category->created_at->format('d-m-Y') }}</td>
                       <td>
-                          <a href="#" class="btn btn-sm btn-info">Edit</a>
+                          <button type="button" 
+                                  class="btn btn-sm btn-info" 
+                                  data-toggle="modal" 
+                                  data-target="#editCategoryModal{{ $category->id }}">
+                            Edit
+                          </button>
                           <form action="{{ route('documents.categories.destroy', $category->id) }}" method="POST" class="d-inline">
                               @csrf
                               @method('DELETE')
@@ -90,4 +97,6 @@
     </div>
   </div>
 </section>
+
+@include('documents.category.modal_edit')
 @endsection

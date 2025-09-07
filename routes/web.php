@@ -29,13 +29,15 @@ Route::prefix('dokumen')->name('documents.')->group(function () {
     Route::get('/create', [DocumentController::class, 'create'])->name('create');
 
     // Kategori Dokumen
-    Route::get('/kategori', [DocumentCategoryController::class, 'index'])->name('categories');
+    Route::get('/kategori', [DocumentCategoryController::class, 'index'])->name('category.categories');
     Route::post('/kateogori', [DocumentCategoryController::class, 'store'])->name('categories.store');
+        Route::put('/kategori/{category}', [DocumentCategoryController::class, 'update'])->name('categories.update');
     Route::delete('/kategori/{id}', [DocumentCategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Tipe Dokumen
-    Route::get('/tipe', [DocumentTypeController::class, 'index'])->name('types');
+    Route::get('/tipe', [DocumentTypeController::class, 'index'])->name('type.types');
     Route::post('/tipe', [DocumentTypeController::class, 'store'])->name('types.store');
+    Route::put('/tipe/{documentType}', [DocumentTypeController::class, 'update'])->name('types.update');
     Route::delete('/tipe/{id}', [DocumentTypeController::class, 'destroy'])->name('types.destroy');
 });
 
@@ -43,6 +45,7 @@ Route::prefix('dokumen')->name('documents.')->group(function () {
 Route::prefix('bidang')->name('bidang.')->group(function () {
     Route::get('/', [UnitController::class, 'index'])->name('index');
     Route::post('/', [UnitController::class, 'store'])->name('store');
+    Route::put('/{id}', [UnitController::class, 'update'])->name('update');
     Route::delete('/{id}', [UnitController::class, 'destroy'])->name('destroy');
 });
 

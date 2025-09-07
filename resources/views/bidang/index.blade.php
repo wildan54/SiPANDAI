@@ -9,7 +9,7 @@
       <!-- Form Tambah Bidang -->
       <div class="col-md-4">
         <div class="card border-success">
-          <div class="card-header bg-success text-white">
+          <div class="card-header bg-warning">
             Tambah Bidang
           </div>
           <form action="{{ route('bidang.store') }}" method="POST">
@@ -21,7 +21,7 @@
               </div>
               <div class="form-group">
                 <label for="slug">Slug <span class="text-danger">*</span></label>
-                <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-bidang" required>
+                <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-bidang">
                 <small class="form-text text-muted">
                   “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung.
                 </small>
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="card-footer">
-              <button type="submit" class="btn btn-success btn-block">Tambah</button>
+              <button type="submit" class="btn btn-warning btn-block">Tambah</button>
             </div>
           </form>
         </div>
@@ -41,7 +41,7 @@
       <!-- Tabel Bidang -->
       <div class="col-md-8">
         <div class="card border-primary">
-          <div class="card-header bg-success text-white">
+          <div class="card-header bg-warning">
               Daftar Bidang
           </div>
           <div class="card-body">
@@ -61,11 +61,17 @@
                   <tr>
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $unit->name }}</td>
-                      <td>{{ $unit->description }}</td>
+                      <td data-tippy-content="{{ $unit->description }}">
+                        {{ \Illuminate\Support\Str::words($unit->description, 5, '...') }}
+                      </td>
                       <td>{{ $unit->slug }}</td>
                       <td>{{ $unit->created_at->format('d-m-Y') }}</td>
                       <td>
-                          <a href="#" class="btn btn-sm btn-info">Edit</a>
+                          <!-- Tombol Edit -->
+                          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $unit->id }}">
+                            Edit
+                          </button>
+                          <!-- Tombol Hapus -->
                           <form action="{{ route('bidang.destroy', $unit->id) }}" method="POST" class="d-inline">
                               @csrf
                               @method('DELETE')
@@ -77,7 +83,6 @@
                   </tr>
                 @endforeach
               </tbody>
-              
             </table>
           </div>
         </div>
@@ -85,4 +90,6 @@
     </div>
   </div>
 </section>
+<!-- Import modal edit -->
+@include('bidang.modal_edit')
 @endsection
