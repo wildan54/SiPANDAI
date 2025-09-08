@@ -29,10 +29,10 @@
             <div class="position-absolute" style="bottom: 15px; right: 15px;">
               <div class="d-flex">
                 <a href="#" id="docEditBtn" class="btn btn-warning mr-2">
-                  <i class="fas fa-edit"></i> Edit
+                  Edit
                 </a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                  <i class="fas fa-arrow-left"></i> Kembali
+                  Kembali
                 </button>
               </div>
             </div>
@@ -59,13 +59,11 @@ $(document).on('click', '.showDocument', function () {
             <li><strong>Kategori</strong> : ${data.type?.name ?? '-'}</li>
             <li><strong>Bidang</strong> : ${data.unit?.name ?? '-'}</li>
             <li><strong>Tahun</strong> : ${data.upload_date_year ?? '-'}</li>
-            <li><strong>Diunggah</strong> : ${data.upload_date_formatted ?? '-'}</li>
-            <li><strong>Tipe</strong> : PDF</li>
-            <li><strong>Ukuran</strong> : - </li>
+            <li><strong>Diunggah</strong> : ${data.upload_date_formatted ?? '-'}</li><br>
         `);
 
         $('#docDescription').text(data.description ?? 'Tidak ada deskripsi');
-        $('#docEditBtn').attr('href', "{{ url('documents') }}/" + id + "/edit");
+        $('#docEditBtn').attr('href', "{{ url('dokumen') }}/" + id + "/edit");
 
         $('#documentModal').modal('show');
     });

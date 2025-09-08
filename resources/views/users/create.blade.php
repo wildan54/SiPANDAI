@@ -7,7 +7,7 @@
         <h1 class="my-3">Tambah Pengguna</h1>
         <div class="row">
             <div class="col-md-12"><!-- Full width -->
-                <div class="card card-primary">
+                <div class="card card-success">
                     <div class="card-header">
                         <h3 class="card-title">Form Tambah Pengguna</h3>
                     </div>
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Simpan Pengguna</button>
+                            <button type="submit" class="btn btn-success">Simpan Pengguna</button>
                             <a href="{{ route('users.index') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>

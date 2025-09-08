@@ -41,4 +41,17 @@ class AccessLog extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    
+    // 🔒 Proteksi supaya log tidak bisa diubah
+    public function update(array $attributes = [], array $options = [])
+    {
+        throw new \Exception("AccessLog entries cannot be updated.");
+    }
+
+    // 🔒 Proteksi supaya log tidak bisa dihapus
+    public function delete()
+    {
+        throw new \Exception("AccessLog entries cannot be deleted.");
+    }
 }

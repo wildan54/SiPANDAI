@@ -16,6 +16,9 @@ return new class extends Migration {
             $table->text('user_agent')->nullable();
             $table->string('referrer', 255)->nullable();
             $table->timestamp('access_datetime')->useCurrent();
+
+            // tambahkan index di sini
+            $table->index('access_datetime');
         });
     }
 

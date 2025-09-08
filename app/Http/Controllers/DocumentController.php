@@ -6,18 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Document;
 use App\Models\DocumentType;
 use App\Models\Unit;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use App\Services\AccessLogService;
 
 class DocumentController extends Controller
 {
-    /**
-     * Constructor: pastikan semua method hanya bisa diakses user login
-     */
-
-        public function __construct()
+    public function __construct()
     {
-        $this->middleware('auth'); // ini sekarang akan bekerja
+        $this->middleware('auth');
     }
 
     /**
@@ -48,6 +45,8 @@ class DocumentController extends Controller
             ->orderBy('year','desc')
             ->pluck('year');
 
+         AccessLogService::log('view');
+
         return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
     }
 
@@ -58,6 +57,8 @@ class DocumentController extends Controller
     {
         $documentTypes  = DocumentType::orderBy('name')->get();
         $units = Unit::orderBy('name')->get();
+
+        AccessLogService::log('view');
 
         return view('documents.create', compact('documentTypes', 'units'));
     }
@@ -79,32 +80,70 @@ class DocumentController extends Controller
             'meta_description' => 'nullable|string|max:500',
         ]);
 
-        // Generate slug otomatis jika tidak diisi
-        $validated['slug'] = $validated['slug'] ?? \Illuminate\Support\Str::slug($validated['title']);
-
-        // Set uploaded_by ke user login
-        $validated['uploaded_by'] = \Illuminate\Support\Facades\Auth::id();
-
-        // Set tanggal upload & updated
+        $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        $validated['uploaded_by'] = Auth::id();
         $validated['upload_date'] = now();
         $validated['updated_at'] = now();
 
-        // Simpan dokumen
-        Document::create($validated);
+        $document = Document::create($validated);
+
+        AccessLogService::log('upload', $document->id);
 
         return redirect()->route('documents.index')->with('success', 'Dokumen berhasil disimpan.');
     }
 
-    // public function show($id)
-    // {
-    //     $document = Document::with(['type', 'unit', 'uploader'])->findOrFail($id);
+    /**
+     * Form edit dokumen.
+     */
+public function edit(Document $document)
+{
+    $document->load('uploader'); // ambil relasi user (uploader)
 
-    //     return view('documents.show', compact('document'));
-    // }
+    $documentTypes = DocumentType::orderBy('name')->get();
+    $units = Unit::orderBy('name')->get();
+
+    AccessLogService::log('view', $document->id);
+
+    return view('documents.edit', compact('document', 'documentTypes', 'units'));
+}
+
+
+    /**
+     * Update dokumen.
+     */
+    public function update(Request $request, Document $document)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file_source' => 'required|in:embed',
+            'file_embed' => 'required|url',
+            'document_type_id' => 'required|integer|exists:document_types,id',
+            'unit_id' => 'required|integer|exists:units,id',
+            'slug' => 'nullable|string|unique:documents,slug,' . $document->id,
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+        ]);
+
+        $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        $validated['updated_at'] = now();
+
+        $document->update($validated);
+
+        AccessLogService::log('update', $document->id);
+
+        return redirect()->route('documents.index')->with('success', 'Dokumen berhasil diperbarui.');
+    }
+
+    /**
+     * Show dokumen (detail / preview).
+     */
     public function show(Document $document)
     {
+
+        AccessLogService::log('view', $document->id);
+
         if (request()->ajax()) {
-            // bikin link embed
             $embedLink = $document->file_embed;
             if (Str::contains($embedLink, 'drive.google.com')) {
                 preg_match('/\/d\/(.*?)\//', $embedLink, $matches);
@@ -128,16 +167,17 @@ class DocumentController extends Controller
 
         return view('documents.show', compact('document'));
     }
-    
 
+    /**
+     * Hapus dokumen.
+     */
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-
         $document->delete();
+
+        AccessLogService::log('delete', $document->id);
 
         return redirect()->route('documents.index')->with('success', 'Dokumen berhasil dihapus.');
     }
-
-
 }

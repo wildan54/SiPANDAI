@@ -13,8 +13,8 @@
     @if(Auth::check())
     <li class="nav-item dropdown">
       <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#">
-        <!-- Avatar -->
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+        <!-- Avatar kecil -->
+        <img src="{{ asset('images/default-avatar.png') }}" 
              class="rounded-circle mr-2" 
              alt="User Avatar" 
              width="32" height="32">
@@ -26,22 +26,25 @@
         <i class="fas fa-caret-down ml-2"></i>
       </a>
 
-      <!-- Dropdown Profile Card -->
-      <div class="dropdown-menu dropdown-menu-right p-3" style="min-width: 250px;">
-        <div class="text-center">
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" 
-               class="rounded-circle mb-2" 
-               alt="User Avatar" 
-               width="64" height="64">
-          <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-          <small class="text-muted">Administrator</small>
-        </div>
+    <!-- Dropdown Profile Card -->
+    <div class="dropdown-menu dropdown-menu-right p-3 text-center" style="min-width: 250px;">
+        <!-- Avatar besar -->
+        <img src="{{ asset('images/default-avatar.png') }}" 
+            class="rounded-circle mb-2 d-block mx-auto" 
+            alt="User Avatar" 
+            width="80" height="80">
+
+        <!-- Nama -->
+        <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+        <small class="text-muted">Administrator</small>
+
         <div class="dropdown-divider"></div>
+
+        <!-- Tombol Profile -->
         <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm btn-block">
-          <i class="fas fa-user-cog mr-1"></i> Profile
+            <i class="fas fa-user-cog mr-1"></i> Profile
         </a>
-      </div>
-    </li>
+    </div>
     @else
     <li class="nav-item">
       <a class="nav-link" href="{{ route('login') }}">Login</a>

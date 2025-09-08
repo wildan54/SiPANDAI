@@ -47,6 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/{document}', [DocumentController::class, 'show'])->name('show');
         Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
+        Route::get('/{document}/edit', [DocumentController::class, 'edit'])->name('edit');
+        Route::put('/{document}', [DocumentController::class, 'update'])->name('update');
     });
 
     

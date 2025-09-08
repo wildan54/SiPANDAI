@@ -56,4 +56,45 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
+
+    /**
+     * Form edit user.
+     */
+    public function edit(User $user)
+    {
+        return view('users.edit', compact('user'));
+    }
+
+    /**
+     * Update user.
+     */
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email'    => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $data = $request->only(['name', 'username', 'email']);
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus user.
+     */
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+    }
 }
