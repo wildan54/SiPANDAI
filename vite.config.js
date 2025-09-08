@@ -9,10 +9,10 @@ export default defineConfig({
         }),
     ],
     server: {
-    host: 'sipandai.test',
+    host: 'sipandai_project.test',
     port: 5173,
     hmr: {
-            host: 'sipandai.test',
+            host: 'sipandai_project.test',
         },
     },
 

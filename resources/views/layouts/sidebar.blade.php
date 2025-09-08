@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <!-- Sidebar Menu -->
+    <!-- Menu -->
     <nav class="mt-2 flex-grow-1">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
         <li class="nav-item">
@@ -58,22 +58,20 @@
       </ul>
     </nav>
 
-    <!-- Tombol Logout (paling bawah sidebar) -->
+    <!-- Tombol Logout (tetap di bawah) -->
     <ul class="nav nav-pills nav-sidebar flex-column mt-auto" role="menu">
-    <li class="nav-item">
-      <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" 
-          class="nav-link d-flex align-items-center text-white" 
-          style="background-color: #dc3545; border: none; width: 100%;">
-          <i class="nav-icon fas fa-sign-out-alt text-white"></i>
-          <p class="d-none d-sm-inline text-white">Logout</p>
-        </button>
-      </form>
-    </li>
-  </ul>
-
-
+      <li class="nav-item">
+        <form method="POST" action="{{ route('logout') }}">
+          @csrf
+          <button type="submit" 
+            class="nav-link d-flex align-items-center text-white" 
+            style="background-color: #dc3545; border: none; width: 100%;">
+            <i class="nav-icon fas fa-sign-out-alt text-white"></i>
+            <p class="d-none d-sm-inline text-white">Logout</p>
+          </button>
+        </form>
+      </li>
+    </ul>
   </div>
   <!-- /.sidebar -->
 </aside>

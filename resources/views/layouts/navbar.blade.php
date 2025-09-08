@@ -10,6 +10,7 @@
 
   <!-- Right navbar (User Info) -->
   <ul class="navbar-nav ml-auto">
+    @if(Auth::check())
     <li class="nav-item dropdown">
       <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#">
         <!-- Avatar -->
@@ -41,5 +42,10 @@
         </a>
       </div>
     </li>
+    @else
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('login') }}">Login</a>
+    </li>
+    @endif
   </ul>
 </nav>

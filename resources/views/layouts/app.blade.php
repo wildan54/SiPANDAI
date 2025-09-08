@@ -2,21 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>@yield('title', 'Dokumen App - AdminLTE 3')</title>
-  
-  <!-- Bootstrap 4 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ config('app.name', 'SiPANDAI') }}</title>
+
+  <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <!-- AdminLTE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-  <!-- DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css">
 
-  <!-- Laravel Vite (CSS & JS app) -->
+  <!-- Vite -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+  <!-- Custom Styles dari child -->
   @stack('styles')
 </head>
 <body class="hold-transition sidebar-mini">
