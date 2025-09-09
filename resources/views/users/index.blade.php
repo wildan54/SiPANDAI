@@ -25,6 +25,7 @@
                 <th>Nama</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Status</th>
                 <th>Terakhir Aktif</th>
                 <th class="text-center">Aksi</th>
@@ -37,6 +38,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->username ? $user->username : '-' }}</td>
                 <td>{{ $user->email }}</td>
+                <td>{{ ucfirst($user->role) }}</td>
                 <td>
                   @if ($user->last_active && $user->last_active->isAfter(now()->subMinutes(10)))
                     <span class="badge badge-success">Aktif</span>
@@ -50,6 +52,7 @@
                     data-id="{{ $user->id }}"
                     data-name="{{ $user->name }}"
                     data-username="{{ $user->username }}"
+                    data-role="{{ $user->role }}"
                     data-email="{{ $user->email }}">
                     Edit
                   </button>

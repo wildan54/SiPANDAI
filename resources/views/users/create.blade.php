@@ -27,6 +27,14 @@
                                 <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan email" required>
                             </div>
                             <div class="form-group">
+                                <label for="role">Role</label>
+                                <select name="role" class="form-control" id="role" required>
+                                    <option value="">-- Pilih Role --</option>
+                                    <option value="administrator">Administrator</option>
+                                    <option value="editor">Editor</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan password" required>
                             </div>

@@ -24,6 +24,14 @@
             <input type="email" name="email" class="form-control" id="edit_email" required>
           </div>
           <div class="form-group">
+            <label for="edit_role">Role</label>
+            <select name="role" class="form-control" id="edit_role" required>
+              <option value="">-- Pilih Role --</option>
+              <option value="administrator">Administrator</option>
+              <option value="editor">Editor</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="edit_password">Password <small>(kosongkan jika tidak ingin diganti)</small></label>
             <input type="password" name="password" class="form-control" id="edit_password">
           </div>
@@ -50,6 +58,7 @@ $(document).ready(function() {
     let name = $(this).data('name');
     let username = $(this).data('username');
     let email = $(this).data('email');
+    let role = $(this).data('role'); // <-- Tambahkan ini
 
     // Set action form
     $('#editUserForm').attr('action', '/pengguna/' + userId);
@@ -58,6 +67,7 @@ $(document).ready(function() {
     $('#edit_name').val(name);
     $('#edit_username').val(username);
     $('#edit_email').val(email);
+    $('#edit_role').val(role); // <-- Tambahkan ini
     $('#edit_password').val('');
     $('#edit_password_confirmation').val('');
 

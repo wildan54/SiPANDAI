@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid py-4">
   <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
     <a href="{{ route('documents.create') }}" class="btn btn-primary font-weight-semibold">
       <i class="fas fa-plus mr-1"></i> Tambah Dokumen
     </a>
@@ -15,48 +15,55 @@
   <div class="card shadow-sm border-0 rounded">
     <!-- Card Header (Filter + Search) -->
     <div class="card-header bg-primary text-white">
-      <form method="GET" action="{{ route('documents.index') }}" class="form-inline w-100">
+      <form method="GET" action="{{ route('documents.index') }}" class="row g-2 align-items-center">
         <!-- Filter Tipe -->
-        <select name="document_type_id" class="form-control form-control-sm mr-2" style="max-width: 150px;">
-          <option value="">Tipe</option>
-          @foreach($documentTypes as $type)
-            <option value="{{ $type->id }}" {{ request('document_type_id') == $type->id ? 'selected' : '' }}>
-              {{ $type->name }}
-            </option>
-          @endforeach
-        </select>
+        <div class="col-12 col-md-auto">
+          <select name="document_type_id" class="form-control form-control-sm w-100">
+            <option value="">Tipe</option>
+            @foreach($documentTypes as $type)
+              <option value="{{ $type->id }}" {{ request('document_type_id') == $type->id ? 'selected' : '' }}>
+                {{ $type->name }}
+              </option>
+            @endforeach
+          </select>
+        </div>
 
         <!-- Filter Unit -->
-        <select name="unit_id" class="form-control form-control-sm mr-2" style="max-width: 200px;">
-          <option value="">Unit</option>
-          @foreach($units as $unit)
-            <option value="{{ $unit->id }}" {{ request('unit_id') == $unit->id ? 'selected' : '' }}>
-              {{ $unit->name }}
-            </option>
-          @endforeach
-        </select>
+        <div class="col-12 col-md-auto">
+          <select name="unit_id" class="form-control form-control-sm w-100">
+            <option value="">Unit</option>
+            @foreach($units as $unit)
+              <option value="{{ $unit->id }}" {{ request('unit_id') == $unit->id ? 'selected' : '' }}>
+                {{ $unit->name }}
+              </option>
+            @endforeach
+          </select>
+        </div>
 
         <!-- Filter Tahun -->
-        <select name="year" class="form-control form-control-sm mr-2" style="max-width: 200px;">
-          <option value="">Tahun Dokumen</option>
-          @foreach($years as $year)
-            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-              {{ $year }}
-            </option>
-          @endforeach
-        </select>
-
+        <div class="col-12 col-md-auto">
+          <select name="year" class="form-control form-control-sm w-100">
+            <option value="">Tahun Dokumen</option>
+            @foreach($years as $year)
+              <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                {{ $year }}
+              </option>
+            @endforeach
+          </select>
+        </div>
         <!-- Search -->
-        <div class="ml-auto input-group input-group-sm" style="width: 250px;">
-          <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari Dokumen...">
-          <div class="input-group-append">
-            <button class="btn btn-light" type="submit">
+        <div class="col-12 col-md-4 ms-md-auto">
+          <div class="input-group input-group-sm w-100">
+            <input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Cari Dokumen...">
+            <button class="btn btn-light btn-sm" type="submit">
               <i class="fas fa-search"></i>
             </button>
           </div>
         </div>
+
       </form>
     </div>
+    
 
     <!-- Table -->
     <div class="card-body p-0">
@@ -120,7 +127,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="card-footer d-flex justify-content-between align-items-center">
+    <div class="card-footer d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
       <div>
         Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
       </div>
