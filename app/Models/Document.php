@@ -22,6 +22,7 @@ class Document extends Model
         'slug',
         'meta_title',
         'meta_description',
+        'year',
         'file_source',   // 'embed' atau 'upload'
         'file_embed',    // link cloud jika embed
         'uploaded_by',   // <- tambahkan ini

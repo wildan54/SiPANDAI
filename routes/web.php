@@ -11,7 +11,7 @@ use App\Http\Controllers\DocumentCategoryController;
 
 // Halaman publik
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
 
 // Refresh captcha publik (tidak perlu login)

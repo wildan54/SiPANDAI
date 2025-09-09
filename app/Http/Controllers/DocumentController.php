@@ -25,7 +25,7 @@ class DocumentController extends Controller
         $documents = Document::with(['type', 'unit', 'uploader'])
             ->when($request->document_type_id, fn ($q, $v) => $q->where('document_type_id', $v))
             ->when($request->unit_id, fn ($q, $v) => $q->where('unit_id', $v))
-            ->when($request->year, fn ($q, $v) => $q->whereYear('upload_date', $v))
+            ->when($request->year, fn ($q, $v) => $q->where('year', $v))
             ->when($request->q, function ($q, $v) {
                 $q->where(function ($qq) use ($v) {
                     $qq->where('title', 'like', "%{$v}%")
@@ -39,13 +39,13 @@ class DocumentController extends Controller
 
         $documentTypes  = DocumentType::orderBy('name')->get();
         $units = Unit::orderBy('name')->get();
-        $years = Document::whereNotNull('upload_date')
-            ->selectRaw('YEAR(upload_date) as year')
+        $years = Document::whereNotNull('year')
+            ->select('year')
             ->distinct()
-            ->orderBy('year','desc')
+            ->orderBy('year', 'desc')
             ->pluck('year');
 
-         AccessLogService::log('view');
+        AccessLogService::log('view');
 
         return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
     }
@@ -78,6 +78,7 @@ class DocumentController extends Controller
             'slug' => 'nullable|string|unique:documents,slug',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1), // ✅ validasi year
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
@@ -95,18 +96,17 @@ class DocumentController extends Controller
     /**
      * Form edit dokumen.
      */
-public function edit(Document $document)
-{
-    $document->load('uploader'); // ambil relasi user (uploader)
+    public function edit(Document $document)
+    {
+        $document->load('uploader');
 
-    $documentTypes = DocumentType::orderBy('name')->get();
-    $units = Unit::orderBy('name')->get();
+        $documentTypes = DocumentType::orderBy('name')->get();
+        $units = Unit::orderBy('name')->get();
 
-    AccessLogService::log('view', $document->id);
+        AccessLogService::log('view', $document->id);
 
-    return view('documents.edit', compact('document', 'documentTypes', 'units'));
-}
-
+        return view('documents.edit', compact('document', 'documentTypes', 'units'));
+    }
 
     /**
      * Update dokumen.
@@ -123,6 +123,7 @@ public function edit(Document $document)
             'slug' => 'nullable|string|unique:documents,slug,' . $document->id,
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
@@ -140,7 +141,6 @@ public function edit(Document $document)
      */
     public function show(Document $document)
     {
-
         AccessLogService::log('view', $document->id);
 
         if (request()->ajax()) {
@@ -159,7 +159,7 @@ public function edit(Document $document)
                 'embed_link' => $embedLink,
                 'type' => $document->type,
                 'unit' => $document->unit,
-                'upload_date_year' => $document->upload_date ? $document->upload_date->format('Y') : '-',
+                'upload_date_year' => $document->year ?? '-',
                 'upload_date_formatted' => $document->upload_date ? $document->upload_date->format('d/m/Y') : '-',
                 'description' => $document->description,
             ]);
