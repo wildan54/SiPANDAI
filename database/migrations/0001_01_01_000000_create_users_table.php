@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('username', 50)->unique()->nullable();
             $table->string('email', 100)->unique();
             $table->string('password', 255);
+            $table->enum('role', ['admin', 'user']);
             $table->dateTime('last_active')->nullable();
             $table->rememberToken(); // biar support "remember me" Laravel
             $table->timestamps();

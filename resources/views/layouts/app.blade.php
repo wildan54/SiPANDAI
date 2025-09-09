@@ -20,7 +20,7 @@
   <!-- Custom Styles dari child -->
   @stack('styles')
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini layout-fixed">
 
 <div class="wrapper">
   {{-- Navbar --}}
@@ -52,30 +52,28 @@
 
 <!-- Inisialisasi DataTables -->
 <script>
-  $(document).ready(function() {
-    $('table.data-table').DataTable({
-      responsive: true,
-      paging: true,
-      lengthChange: true,
-      searching: true,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      language: {
-        search: "Cari:",
-        paginate: {
-          first: "Pertama",
-          last: "Terakhir",
-          next: "Berikut",
-          previous: "Sebelumnya"
-        },
-        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-        lengthMenu: "Tampilkan _MENU_ data"
-      }
-    });
-  });
+  $('table.data-table').DataTable({
+  responsive: true,
+  paging: true,
+  lengthChange: true,
+  searching: true,
+  ordering: true,
+  info: true,
+  autoWidth: false,
+  language: {
+    search: "Cari:",
+    paginate: {
+      first: "Pertama",
+      last: "Terakhir",
+      next: "Berikut",
+      previous: "Sebelumnya"
+    },
+    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+    lengthMenu: "Tampilkan _MENU_ data"
+  },
+  dom: '<"d-flex justify-content-between align-items-center mb-2"l<"ml-auto"f>>rt<"d-flex justify-content-between mt-2"i p>'
+});
 </script>
-
 @stack('scripts')
 </body>
 </html>

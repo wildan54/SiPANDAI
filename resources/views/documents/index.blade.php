@@ -19,7 +19,7 @@
         <!-- Filter Tipe -->
         <select name="document_type_id" class="form-control form-control-sm mr-2" style="max-width: 150px;">
           <option value="">Tipe</option>
-          @foreach($documentTypes  as $type)
+          @foreach($documentTypes as $type)
             <option value="{{ $type->id }}" {{ request('document_type_id') == $type->id ? 'selected' : '' }}>
               {{ $type->name }}
             </option>
@@ -64,7 +64,7 @@
         <table class="table table-striped table-hover align-middle mb-0">
           <thead class="thead-light">
             <tr>
-              <th style="width: 5%">#</th>
+              <th style="width: 5%">No</th>
               <th>Judul Dokumen</th>
               <th style="width: 15%">Tipe Dokumen</th>
               <th style="width: 15%">Unit</th>
@@ -100,9 +100,6 @@
                     data-id="{{ $doc->id }}">
                     <i class="fas fa-eye"></i>
                   </a>
-                  <a href="#" class="btn btn-sm btn-outline-warning mr-1" title="Edit">
-                    <i class="fas fa-edit"></i>
-                  </a>
                   <form action="{{ route('documents.destroy', $doc->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
@@ -123,10 +120,10 @@
     </div>
 
     <!-- Footer -->
-    <div class="card-footer d-flex justify-content-between">
-      <span>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+      <div>
         Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
-      </span>
+      </div>
       <div>
         {{ $documents->links('pagination::bootstrap-4') }}
       </div>

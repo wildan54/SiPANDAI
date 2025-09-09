@@ -29,6 +29,9 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
 
+            // Tahun dokumen (manual, tidak ambil dari upload_date)
+            $table->year('year'); 
+
             // Upload info (wajib)
             $table->timestamp('upload_date');               // tidak nullable
             $table->unsignedBigInteger('uploaded_by');      // tidak nullable
