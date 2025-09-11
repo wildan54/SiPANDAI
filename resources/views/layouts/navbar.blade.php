@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light sticky-top">
   <!-- Left navbar -->
   <ul class="navbar-nav">
     <li class="nav-item">
@@ -41,8 +41,8 @@
         <div class="dropdown-divider"></div>
 
         <!-- Tombol Profile -->
-        <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm btn-block">
-            <i class="fas fa-user-cog mr-1"></i> Profile
+        <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-block" style="background-color: #FEBC2F">
+            <i class="fas fa-user-cog mr-1"></i> Profil
         </a>
     </div>
     @else

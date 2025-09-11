@@ -28,7 +28,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Simpan') }}</x-primary-button>
+            <x-primary-button  class="bg-yellow-400 text-blue-900 hover:bg-yellow-500">{{ __('Simpan') }}</x-primary-button>
 
             @if (session('status') === 'password-updated')
                 <p
@@ -36,8 +36,8 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                    class="text-sm" style="background-color: #FEBC2F"
+                >{{ __('Tersimpan') }}</p>
             @endif
         </div>
     </form>

@@ -1,15 +1,51 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar elevation-4" style="background-color: #030F6B;">
+
+  <style>
+    /* Semua link sidebar berwarna putih */
+    .sidebar .nav-link {
+      color: #ffffff !important;
+    }
+
+    /* Hover / aktif */
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+      background-color: #1a237e !important; /* biru tua saat aktif/hover */
+      color: #ffffff !important;
+    }
+
+    /* Icon di nav-link */
+    .sidebar .nav-icon {
+      color: #ffffff !important;
+    }
+
+    /* Submenu icon */
+    .sidebar .nav-treeview .nav-icon {
+      color: #ffffff !important;
+    }
+
+    /* Saat sidebar collapse, sembunyikan teks */
+    body.sidebar-collapse .sidebar .sidebar-text {
+      display: none;
+    }
+
+    /* Tetap tampilkan ikon */
+    body.sidebar-collapse .sidebar .sidebar-header i {
+      margin-right: 0; /* agar icon centering lebih rapi */
+    }
+
+  </style>
 
   <!-- Sidebar -->
   <div class="sidebar d-flex flex-column">
     
-    <!-- Sapaan -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="info">
-        <span class="d-block text-white">
-          Selamat datang di <br>
-          <strong>Dashboard SiPANDAI</strong>
-        </span>
+    <!-- Header: Logo + Judul -->
+    <div class="d-flex align-items-center sidebar-header pt-4 py-4 px-3">
+      <i class="fas fa-file-alt fa-2x text-white mr-2"></i>
+      <div class="sidebar-text">
+        <h5 class="mb-0 text-white">Dashboard</h5>
+        <h3 class="mb-0 text-white">
+          <strong class="px-1">SiPANDAI</strong>
+        </h3>
       </div>
     </div>
 
@@ -67,6 +103,7 @@
         </li>
 
         <!-- Pengguna -->
+        @if(auth()->user()->role === 'administrator')
         <li class="nav-item {{ Request::routeIs('users.*') ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ Request::routeIs('users.*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-users"></i>
@@ -88,6 +125,7 @@
             </li>
           </ul>
         </li>
+        @endif
       </ul>
     </nav>
 
@@ -97,10 +135,10 @@
         <form method="POST" action="{{ route('logout') }}">
           @csrf
           <button type="submit" 
-            class="nav-link d-flex align-items-center text-white" 
-            style="background-color: #dc3545; border: none; width: 100%;">
-            <i class="nav-icon fas fa-sign-out-alt text-white"></i>
-            <p class="d-none d-sm-inline text-white">Logout</p>
+              class="nav-link d-flex align-items-center" 
+              style="background-color: #FEBC2F; border: none; width: 100%;">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p class="d-none d-sm-inline text-white">Logout</p>
           </button>
         </form>
       </li>

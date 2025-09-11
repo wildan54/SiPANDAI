@@ -61,7 +61,7 @@ $(document).ready(function() {
     let role = $(this).data('role'); // <-- Tambahkan ini
 
     // Set action form
-    $('#editUserForm').attr('action', '/pengguna/' + userId);
+    $('#editUserForm').attr('action', 'pengguna/' + userId);
 
     // Isi form
     $('#edit_name').val(name);
