@@ -1,18 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Administrator\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\UnitController;
-use App\Http\Controllers\DocumentTypeController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DocumentCategoryController;
+use App\Http\Controllers\Administrator\DocumentController;
+use App\Http\Controllers\Administrator\UnitController;
+use App\Http\Controllers\Administrator\DocumentTypeController;
+use  App\Http\Controllers\Administrator\UserController;
+use App\Http\Controllers\Administrator\DocumentCategoryController;
+use App\Http\Controllers\Public\DocumentController as PublicDocumentController;
 
-// Halaman publik
-Route::get('/', function () {
-    return view('login');
-});
 
 // Refresh captcha publik (tidak perlu login)
 Route::get('captcha-refresh', function () {
@@ -23,12 +20,12 @@ Route::get('captcha-refresh', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', function () {
+    Route::get('admin/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
     // Dokumen
-    Route::prefix('dokumen')->name('documents.')->group(function () {
+    Route::prefix('admin/dokumen')->name('documents.')->group(function () {
         Route::get('/', [DocumentController::class, 'index'])->name('index');
         Route::get('/dokumen-baru', [DocumentController::class, 'create'])->name('create');
         Route::post('/', [DocumentController::class, 'store'])->name('store');
@@ -54,7 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
 
     // Bidang / Unit
-    Route::prefix('bidang')->name('bidang.')->group(function () {
+    Route::prefix('admin/bidang')->name('bidang.')->group(function () {
         Route::get('/', [UnitController::class, 'index'])->name('index');
         Route::post('/', [UnitController::class, 'store'])->name('store');
         Route::put('/{id}', [UnitController::class, 'update'])->name('update');
@@ -62,7 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Pengguna
-    Route::prefix('pengguna')->name('users.')->group(function () {
+    Route::prefix('admin/pengguna')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/pengguna-baru', [UserController::class, 'create'])->name('create');
         Route::post('/', [UserController::class, 'store'])->name('store');
@@ -76,6 +73,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+    // Route untuk publik tidak perlu login
+    // Halaman publik
+    Route::prefix('/dokumen')->group(function () {
+    Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('public.documents.show');
+    Route::get('/download/{slug}', [PublicDocumentController::class, 'download'])->name('public.documents.download');
+});
+    Route::get('/', [PublicDocumentController::class, 'index'])->name('public.home');
 
 // Auth routes (login, register, password, etc.)
 require __DIR__.'/auth.php';

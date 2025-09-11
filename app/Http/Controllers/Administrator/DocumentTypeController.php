@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administrator;
 
+use App\Http\Controllers\Controller;
 use App\Models\DocumentType;
 use App\Models\DocumentCategory;
 use Illuminate\Http\Request;

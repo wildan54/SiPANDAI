@@ -61,30 +61,50 @@
 
 @push('scripts')
 <script>
-$(document).on('click', '.showDocument', function () {
-    let id = $(this).data('id');
+$(function () {
+    // Klik tombol eye
+    $(document).on('click', '.showDocument', function () {
+        let id = $(this).data('id');
 
-    $.get("{{ url('dokumen') }}/" + id, function (data) {
-        // isi modal dengan data JSON
-        $('#docTitle').text(data.title.toUpperCase());
-        $('#docEmbed').attr('src', data.embed_link + "#toolbar=0");
-        $('#docCategory').text(data.type?.name ?? '-');
+        $.get("{{ url('admin/dokumen') }}/" + id, function (data) {
+            // Isi modal dengan data JSON
+            $('#docTitle').text(data.title.toUpperCase());
+            $('#docEmbed').attr('src', (data.embed_link ?? '') + "#toolbar=0");
+            $('#docCategory').text(data.type?.name ?? '-');
 
-        $('#docDetails').html(`
-            <li><strong>Kategori</strong> : ${data.type?.name ?? '-'}</li>
-            <li><strong>Bidang</strong> : ${data.unit?.name ?? '-'}</li>
-            <li><strong>Tahun</strong> : ${data.upload_date_year ?? '-'}</li>
-            <li><strong>Diunggah</strong> : ${data.upload_date_formatted ?? '-'}</li><br>
-        `);
+            $('#docDetails').html(`
+                <li><strong>Kategori</strong> : ${data.type?.name ?? '-'}</li>
+                <li><strong>Bidang</strong> : ${data.unit?.name ?? '-'}</li>
+                <li><strong>Tahun</strong> : ${data.upload_date_year ?? '-'}</li>
+                <li><strong>Diunggah</strong> : ${data.upload_date_formatted ?? '-'}</li><br>
+            `);
 
-        $('#docDescription').text(data.description ?? 'Tidak ada deskripsi');
-        $('#docEditBtn').attr('href', "{{ url('dokumen') }}/" + id + "/edit");
+            $('#docDescription').text(data.description ?? 'Tidak ada deskripsi');
+            $('#docEditBtn').attr('href', "{{ url('admin/dokumen') }}/" + id + "/edit");
+            $('#docPreviewLink').attr('href', data.embed_link ?? '#');
 
-        // set link preview alternatif
-        $('#docPreviewLink').attr('href', data.embed_link ?? '#');
+            $('#documentModal').modal('show');
+        });
+    });
 
-        $('#documentModal').modal('show');
+    // Event setelah modal ditutup → reset isi
+    $('#documentModal').on('hidden.bs.modal', function () {
+        $('#docTitle').text('');
+        $('#docEmbed').attr('src', '');
+        $('#docCategory').text('');
+        $('#docDetails').html('');
+        $('#docDescription').text('');
+        $('#docEditBtn').attr('href', '#');
+        $('#docPreviewLink').attr('href', '#');
+    });
+
+    // Contoh tambahan: klik "Edit" langsung ke halaman edit
+    $(document).on('click', '#docEditBtn', function (e) {
+        // kalau mau AJAX edit, bisa preventDefault di sini
+        // e.preventDefault();
+        // lalu tampilkan form edit di modal lain
     });
 });
 </script>
 @endpush
+
