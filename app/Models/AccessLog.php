@@ -12,12 +12,13 @@ class AccessLog extends Model
     public $timestamps = false; // nonaktifkan default created_at & updated_at
 
     protected $fillable = [
-        'user_id',
-        'document_id',
-        'access_type',
-        'ip_address',
-        'user_agent',
-        'referrer',
+    'user_id',
+    'document_id',
+    'document_title',
+    'access_type',
+    'ip_address',
+    'user_agent',
+    'referrer',
     ];
 
     // isi otomatis kolom access_datetime

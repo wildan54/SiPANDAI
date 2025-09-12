@@ -70,7 +70,7 @@ $(function () {
             // Isi modal dengan data JSON
             $('#docTitle').text(data.title.toUpperCase());
             $('#docEmbed').attr('src', (data.embed_link ?? '') + "#toolbar=0");
-            $('#docCategory').text(data.type?.name ?? '-');
+            $('#docCategory').text(data.type?.category?.name ?? '-');
 
             $('#docDetails').html(`
                 <li><strong>Kategori</strong> : ${data.type?.name ?? '-'}</li>

@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dokumen
     Route::prefix('admin/dokumen')->name('documents.')->group(function () {
+        // Dokumen utama
         Route::get('/', [DocumentController::class, 'index'])->name('index');
         Route::get('/dokumen-baru', [DocumentController::class, 'create'])->name('create');
         Route::post('/', [DocumentController::class, 'store'])->name('store');
@@ -34,14 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/kategori', [DocumentCategoryController::class, 'index'])->name('category.categories');
         Route::post('/kategori', [DocumentCategoryController::class, 'store'])->name('categories.store');
         Route::put('/kategori/{category}', [DocumentCategoryController::class, 'update'])->name('categories.update');
-        Route::delete('/kategori/{id}', [DocumentCategoryController::class, 'destroy'])->name('categories.destroy');
+        Route::delete('/kategori/{category}', [DocumentCategoryController::class, 'destroy'])->name('categories.destroy');
 
         // Tipe Dokumen
         Route::get('/tipe', [DocumentTypeController::class, 'index'])->name('type.types');
         Route::post('/tipe', [DocumentTypeController::class, 'store'])->name('types.store');
         Route::put('/tipe/{documentType}', [DocumentTypeController::class, 'update'])->name('types.update');
-        Route::delete('/tipe/{id}', [DocumentTypeController::class, 'destroy'])->name('types.destroy');
+        Route::delete('/tipe/{documentType}', [DocumentTypeController::class, 'destroy'])->name('types.destroy');
 
+        // ⚠️ Route catch-all HARUS di paling bawah
         Route::get('/{document}', [DocumentController::class, 'show'])->name('show');
         Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
         Route::get('/{document}/edit', [DocumentController::class, 'edit'])->name('edit');

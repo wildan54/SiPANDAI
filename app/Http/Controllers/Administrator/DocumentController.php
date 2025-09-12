@@ -145,6 +145,9 @@ class DocumentController extends Controller
         AccessLogService::log('view', $document->id);
 
         if (request()->ajax()) {
+            // ✅ load relasi type → category dan unit
+            $document->load(['type.category', 'unit']);
+
             $embedLink = $document->file_embed;
             if (Str::contains($embedLink, 'drive.google.com')) {
                 preg_match('/\/d\/(.*?)\//', $embedLink, $matches);
@@ -158,16 +161,19 @@ class DocumentController extends Controller
                 'id' => $document->id,
                 'title' => $document->title,
                 'embed_link' => $embedLink,
-                'type' => $document->type,
+                'type' => $document->type, // di dalam ini sudah ada category
                 'unit' => $document->unit,
                 'upload_date_year' => $document->year ?? '-',
-                'upload_date_formatted' => $document->upload_date ? $document->upload_date->format('d/m/Y') : '-',
+                'upload_date_formatted' => $document->upload_date
+                    ? $document->upload_date->format('d/m/Y')
+                    : '-',
                 'description' => $document->description,
             ]);
         }
 
         return view('documents.show', compact('document'));
     }
+
 
     /**
      * Hapus dokumen.

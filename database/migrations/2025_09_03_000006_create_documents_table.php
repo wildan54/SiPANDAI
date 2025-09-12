@@ -16,11 +16,12 @@ return new class extends Migration
             // Relasi tipe dokumen dan unit
             $table->unsignedBigInteger('document_type_id');
             $table->unsignedBigInteger('unit_id');
+            $table->unsignedBigInteger('uploaded_by'); // user yang upload dokumen
 
             // File: bisa upload atau embed
-            $table->string('file_path')->nullable();         // untuk file upload
-            $table->string('file_source')->default('embed'); // 'upload' atau 'embed'
-            $table->text('file_embed')->nullable();          // link cloud jika embed
+            $table->string('file_path')->nullable();
+            $table->string('file_source')->default('embed'); 
+            $table->text('file_embed')->nullable();
             $table->integer('file_size')->nullable();
             $table->string('file_type')->nullable();
 
@@ -32,16 +33,22 @@ return new class extends Migration
             // Tahun dokumen (manual, tidak ambil dari upload_date)
             $table->year('year'); 
 
-            // Upload info (wajib)
-            $table->timestamp('upload_date');               // tidak nullable
-            $table->unsignedBigInteger('uploaded_by');      // tidak nullable
-
+            // Upload info
+            $table->timestamp('upload_date');
             $table->timestamp('updated_at')->nullable();
 
             // Index/foreign key
-            $table->foreign('document_type_id')->references('id')->on('document_types')->onDelete('cascade');
-            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
-            $table->foreign('uploaded_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('document_type_id')
+                  ->references('id')->on('document_types')
+                  ->restrictOnDelete(); // ❌ dokumen tidak ikut hilang saat tipe dihapus
+
+            $table->foreign('unit_id')
+                  ->references('id')->on('units')
+                  ->cascadeOnDelete();  // unit hilang, dokumen ikut hilang
+
+            $table->foreign('uploaded_by')
+                  ->references('id')->on('users')
+                  ->restrictOnDelete(); // ❌ dokumen tidak ikut hilang saat user dihapus
         });
     }
 

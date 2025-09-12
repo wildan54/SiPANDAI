@@ -79,7 +79,7 @@
                       <th>Slug</th>
                       <th>Deskripsi</th>
                       <th>Kategori</th>
-                      <th>Dibuat</th>
+                      <th>Jumlah</th>
                       <th>Aksi</th>
                   </tr>
               </thead>
@@ -93,7 +93,7 @@
                         {{ \Illuminate\Support\Str::words($type->description ?? '—', 8, '...') }}
                       </td>
                       <td>{{ $type->category->name ?? '—' }}</td>
-                      <td>{{ $type->created_at->format('d-m-Y') }}</td>
+                      <td>{{ $type->documents_count ?? 0 }}</td>
                       <td>
                           <!-- Tombol Edit -->
                           <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $type->id }}">

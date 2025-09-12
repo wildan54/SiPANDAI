@@ -70,7 +70,6 @@
                       <th>Deskripsi</th>
                       <th>Slug</th>
                       <th>Jumlah</th>
-                      <th>Dibuat</th>
                       <th>Aksi</th>
                   </tr>
               </thead>
@@ -84,7 +83,6 @@
                       </td>
                       <td>{{ $category->slug }}</td>
                       <td>{{ $category->documents_count ?? 0 }}</td>
-                      <td>{{ $category->created_at->format('d-m-Y') }}</td>
                       <td>
                           <button type="button" 
                                   class="btn btn-sm btn-info" 
