@@ -29,10 +29,11 @@ class UserController extends Controller
         $search = $request->input('search');
 
         $users = User::query()
+            ->withCount('documents') // hitung jumlah dokumen
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('username', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('username', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10);
@@ -111,12 +112,36 @@ class UserController extends Controller
     }
 
     /**
-     * Hapus user.
+     * Hapus user dengan opsi hapus/pindahkan dokumen.
      */
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
         $this->checkAdminAccess();
 
+        // 🔒 Cegah admin menghapus dirinya sendiri
+        if ($user->id === optional(auth()->user)->id) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak bisa menghapus diri sendiri.');
+        }
+        // Validasi pilihan hapus atau pindahkan
+        $request->validate([
+            'action'    => 'required|in:delete,move',
+            'target_id' => 'required_if:action,move|exists:users,id',
+        ]);
+
+        $action = $request->input('action'); // 'delete' atau 'move'
+        $targetUserId = $request->input('target_id'); // jika move
+
+        if ($user->documents()->count() > 0) {
+            if ($action === 'delete') {
+                // Hapus semua dokumen terkait
+                $user->documents()->delete();
+            } elseif ($action === 'move') {
+                // Pindahkan dokumen ke user lain
+                $user->documents()->update(['user_id' => $targetUserId]);
+            }
+        }
+
+        // AccessLog ikut terhapus otomatis lewat hook di model User
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');

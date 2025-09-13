@@ -9,9 +9,13 @@ use Illuminate\Support\Str;
 
 class UnitController extends Controller
 {
-    public function index()
+
+        public function index()
     {
-        $units = Unit::latest()->paginate(10);
+        $units = Unit::withCount('documents')
+                    ->latest()
+                    ->paginate(10);
+
         return view('bidang.index', compact('units'));
     }
 
@@ -69,6 +73,6 @@ class UnitController extends Controller
         $unit->delete();
 
         return redirect()->route('bidang.index')
-                         ->with('success', 'Bidang berhasil dihapus.');
+                         ->with('success', 'Bidang dan semua dokumen terkait berhasil dihapus.');
     }
 }

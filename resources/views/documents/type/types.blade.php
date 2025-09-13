@@ -95,25 +95,34 @@
                       <td>{{ $type->category->name ?? '—' }}</td>
                       <td>{{ $type->documents_count ?? 0 }}</td>
                       <td>
-                          <!-- Tombol Edit -->
-                          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $type->id }}">
-                            Edit
-                          </button>
-                          <form action="{{ route('documents.types.destroy', $type->id) }}" method="POST" class="d-inline">
-                              @csrf
-                              @method('DELETE')
-                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus tipe dokumen ini?')">
-                                  Hapus
-                              </button>
-                          </form>
-                      </td>
+                      <!-- Tombol Edit -->
+                      <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $type->id }}">
+                        Edit
+                      </button>
+
+                      <!-- Tombol Hapus -->
+                      <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmDeleteModal{{ $type->id }}">
+                          Hapus
+                      </button>
+
+                      <!-- Modal Hapus -->
+                      <x-confirm-delete-modal 
+                          :id="'confirmDeleteModal'.$type->id"
+                          title="Hapus Tipe Dokumen"
+                          name="{{ $type->name }}"
+                          :action="route('documents.types.destroy', $type->id)"
+                          :hasMoveOption="$type->documents_count > 0"
+                          :moveOptions="$types->where('id', '!=', $type->id)"
+                      />
+
+                  </td>
                   </tr>
                   @endforeach
               </tbody>
             </table>
 
             <p class="mt-3 text-muted">
-              Menghapus tipe dokumen tidak menghapus dokumen yang terkait.
+              Menghapus tipe dokumen, akan menghapus semua dokumen yang terkait dengan tipe tersebut, kecuali jika Anda memilih untuk memindahkannya ke tipe lain.
             </p>
           </div>
         </div>

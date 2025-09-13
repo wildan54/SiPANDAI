@@ -44,12 +44,23 @@
                         </div>
 
 						<input type="hidden" name="file_source" value="embed">
-
                         {{-- File Embed --}}
                         <div class="form-group">
-                            <label for="file_embed">Link/Embed File <span class="text-danger">*</span></label>
-                            <input type="url" class="form-control" id="file_embed" name="file_embed" value="{{ old('file_embed') }}" placeholder="Masukkan URL/embed link file dari cloud" required>
+                        <label for="file_embed">Link/Embed File <span class="text-danger">*</span></label>
+                        <input type="url" class="form-control" id="file_embed" name="file_embed" 
+                                value="{{ old('file_embed') }}" 
+                                placeholder="Masukkan URL/embed link file dari Nextcloud (share publik)" required>
+
+                        <small class="form-text text-muted">
+                            Dokumen harus diupload terlebih dahulu ke <strong>Nextcloud</strong>, kemudian di-share secara publik. 
+                            Salin link publik dan tempelkan di kolom ini.
+                        </small>
+
+                        <a href="https://dinz.ddns.net/nextcloud/index.php/login" target="_blank" class="btn btn-sm btn-info mt-2">
+                            <i class="fas fa-cloud-upload-alt"></i> Buka Nextcloud
+                        </a>
                         </div>
+
 
                         {{-- Tipe Dokumen --}}
                         <div class="form-group">

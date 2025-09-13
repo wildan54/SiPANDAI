@@ -58,11 +58,34 @@ class DocumentTypeController extends Controller
                          ->with('success', 'Tipe dokumen berhasil diperbarui.');
     }
 
-    public function destroy(DocumentType $documentType)
+    public function destroy(Request $request, DocumentType $documentType)
     {
-        $documentType->delete();
+        $action = $request->input('action'); // delete | move
+        $targetTypeId = $request->input('target_id');
 
-        return redirect()->route('documents.type.types')
-                         ->with('success', 'Tipe dokumen berhasil dihapus.');
+        if ($action === 'delete') {
+            // 🔥 Hapus semua dokumen milik tipe ini
+            $documentType->documents()->delete();
+            $documentType->delete();
+
+            return redirect()->route('documents.type.types')
+                ->with('success', 'Tipe dokumen dan semua dokumennya berhasil dihapus.');
+        }
+
+        if ($action === 'move' && $targetTypeId) {
+            // 📦 Pindahkan dokumen ke tipe lain
+            foreach ($documentType->documents as $doc) {
+                $doc->document_type_id = $targetTypeId;
+                $doc->save();
+            }
+
+            $documentType->delete();
+
+            return redirect()->route('documents.type.types')
+                ->with('success', 'Tipe dokumen berhasil dihapus dan semua dokumen dipindahkan ke tipe lain.');
+        }
+
+        return back()->with('error', 'Anda harus memilih aksi yang valid (hapus semua atau pindah ke tipe lain).');
     }
+
 }

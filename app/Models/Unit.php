@@ -16,4 +16,10 @@ class Unit extends Model
             $unit->slug = Str::slug($unit->name);
         });
     }
+
+    // Relasi ke Document
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
 }

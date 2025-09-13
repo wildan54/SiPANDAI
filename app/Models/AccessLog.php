@@ -9,19 +9,18 @@ class AccessLog extends Model
 {
     use HasFactory;
 
-    public $timestamps = false; // nonaktifkan default created_at & updated_at
+    public $timestamps = false;
 
     protected $fillable = [
-    'user_id',
-    'document_id',
-    'document_title',
-    'access_type',
-    'ip_address',
-    'user_agent',
-    'referrer',
+        'user_id',
+        'document_id',
+        'document_title',
+        'access_type',
+        'ip_address',
+        'user_agent',
+        'referrer',
     ];
 
-    // isi otomatis kolom access_datetime
     protected static function boot()
     {
         parent::boot();
@@ -43,16 +42,21 @@ class AccessLog extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    
     // 🔒 Proteksi supaya log tidak bisa diubah
     public function update(array $attributes = [], array $options = [])
     {
         throw new \Exception("AccessLog entries cannot be updated.");
     }
 
-    // 🔒 Proteksi supaya log tidak bisa dihapus
+    // 🔒 Proteksi supaya log tidak bisa dihapus lewat delete()
     public function delete()
     {
         throw new \Exception("AccessLog entries cannot be deleted.");
+    }
+
+    // ✅ Force delete khusus untuk sistem (misalnya saat user dihapus)
+    public function forceDelete()
+    {
+        return parent::delete();
     }
 }

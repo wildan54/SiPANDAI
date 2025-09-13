@@ -7,7 +7,7 @@
   @include('public.partials.filter')
 
   <!-- Judul -->
-  <h4 class="fw-bold mb-3">DOKUMEN <span class="text-warning">PUBLIK</span></h4>
+  <h4 class="fw-bold mb-3">DOKUMEN <span class="text" style="color: #FEBC2F;">PUBLIK</span></h4>
 
   <!-- Grid Dokumen -->  
   <div class="row">

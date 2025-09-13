@@ -8,11 +8,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Kolom yang bisa diisi mass-assignment.
      *
      * @var list<string>
      */
@@ -26,7 +25,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Kolom yang disembunyikan ketika serialisasi.
      *
      * @var list<string>
      */
@@ -36,21 +35,51 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Casting atribut.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
+            'password'    => 'hashed',
             'last_active' => 'datetime',
         ];
     }
 
+    /**
+     * Cek apakah user sedang online.
+     */
     public function isOnline(): bool
     {
         return $this->last_active && $this->last_active->greaterThan(now()->subMinutes(5));
     }
 
+    /**
+     * Relasi ke access logs.
+     */
+    public function accessLogs()
+    {
+        return $this->hasMany(AccessLog::class, 'uploaded_by');
+    }
+
+    /**
+     * Relasi ke dokumen.
+     */
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'uploaded_by');
+    }
+
+    /**
+     * Hapus access log saat user dihapus.
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            foreach ($user->accessLogs as $log) {
+                $log->forceDelete(); // bypass proteksi delete() di AccessLog
+            }
+        });
+    }
 }

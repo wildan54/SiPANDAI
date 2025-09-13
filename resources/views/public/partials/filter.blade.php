@@ -33,7 +33,7 @@
         <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
       </select>
 
-      <button class="btn btn-primary mb-2">Filter</button>
+      <button class="btn mb-2" style="background-color: #FEBC2F;">Filter</button>
       <a href="{{ route('public.home') }}" class="btn btn-secondary mb-2">Reset</a>
     </div>
   </div>

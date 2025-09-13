@@ -46,8 +46,6 @@ class DocumentController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        AccessLogService::log('view');
-
         return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
     }
 
@@ -59,7 +57,7 @@ class DocumentController extends Controller
         $documentTypes  = DocumentType::orderBy('name')->get();
         $units = Unit::orderBy('name')->get();
 
-        AccessLogService::log('view');
+        AccessLogService::log('view'); // tanpa dokumen
 
         return view('documents.create', compact('documentTypes', 'units'));
     }
@@ -79,7 +77,7 @@ class DocumentController extends Controller
             'slug' => 'nullable|string|unique:documents,slug',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
-            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1), // ✅ validasi year
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
@@ -89,7 +87,7 @@ class DocumentController extends Controller
 
         $document = Document::create($validated);
 
-        AccessLogService::log('upload', $document->id);
+        AccessLogService::log('upload', $document);
 
         return redirect()->route('documents.index')->with('success', 'Dokumen berhasil disimpan.');
     }
@@ -104,7 +102,7 @@ class DocumentController extends Controller
         $documentTypes = DocumentType::orderBy('name')->get();
         $units = Unit::orderBy('name')->get();
 
-        AccessLogService::log('view', $document->id);
+        AccessLogService::log('view', $document);
 
         return view('documents.edit', compact('document', 'documentTypes', 'units'));
     }
@@ -132,7 +130,7 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
-        AccessLogService::log('update', $document->id);
+        AccessLogService::log('update', $document);
 
         return redirect()->route('documents.index')->with('success', 'Dokumen berhasil diperbarui.');
     }
@@ -142,10 +140,9 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        AccessLogService::log('view', $document->id);
+        AccessLogService::log('view', $document);
 
         if (request()->ajax()) {
-            // ✅ load relasi type → category dan unit
             $document->load(['type.category', 'unit']);
 
             $embedLink = $document->file_embed;
@@ -161,7 +158,7 @@ class DocumentController extends Controller
                 'id' => $document->id,
                 'title' => $document->title,
                 'embed_link' => $embedLink,
-                'type' => $document->type, // di dalam ini sudah ada category
+                'type' => $document->type,
                 'unit' => $document->unit,
                 'upload_date_year' => $document->year ?? '-',
                 'upload_date_formatted' => $document->upload_date
@@ -174,16 +171,16 @@ class DocumentController extends Controller
         return view('documents.show', compact('document'));
     }
 
-
     /**
      * Hapus dokumen.
      */
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-        $document->delete();
 
-        AccessLogService::log('delete', $document->id);
+        AccessLogService::log('delete', $document);
+
+        $document->delete();
 
         return redirect()->route('documents.index')->with('success', 'Dokumen berhasil dihapus.');
     }

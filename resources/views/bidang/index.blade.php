@@ -52,6 +52,7 @@
                       <th>Nama</th>
                       <th>Deskripsi</th>
                       <th>Slug</th>
+                      <th>Jumlah Dokumen</th> <!-- kolom baru -->
                       <th>Dibuat</th>
                       <th>Aksi</th>
                   </tr>
@@ -65,25 +66,37 @@
                         {{ \Illuminate\Support\Str::words($unit->description, 5, '...') }}
                       </td>
                       <td>{{ $unit->slug }}</td>
+                      <td>
+                        {{ $unit->documents_count }} <!-- ambil dari withCount -->
+                      </td>
                       <td>{{ $unit->created_at->format('d-m-Y') }}</td>
                       <td>
-                          <!-- Tombol Edit -->
-                          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $unit->id }}">
-                            Edit
-                          </button>
-                          <!-- Tombol Hapus -->
-                          <form action="{{ route('bidang.destroy', $unit->id) }}" method="POST" class="d-inline">
-                              @csrf
-                              @method('DELETE')
-                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus bidang ini?')">
-                                  Hapus
-                              </button>
-                          </form>
-                      </td>
+                        <!-- Tombol Edit -->
+                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $unit->id }}">
+                          Edit
+                        </button>
+                        <!-- Tombol Hapus -->
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUnit{{ $unit->id }}">
+                            Hapus
+                        </button>
+
+                        <!-- Modal konfirmasi hapus -->
+                        <x-confirm-delete-modal 
+                            :id="'deleteUnit' . $unit->id"
+                            title="Konfirmasi Hapus Bidang"
+                            text="Perhatian! Menghapus bidang akan menghapus semua Dokumen di dalamnya."
+                            :name="$unit->name"
+                            :action="route('bidang.destroy', $unit->id)"
+                        />
+                    </td>
                   </tr>
                 @endforeach
               </tbody>
             </table>
+
+            <p class="mt-3 text-muted">
+              Menghapus bidang akan menghapus data terkait di dalamnya.
+            </p>
           </div>
         </div>
       </div>
