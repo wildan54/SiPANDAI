@@ -165,6 +165,7 @@ class DocumentController extends Controller
                     ? $document->upload_date->format('d/m/Y')
                     : '-',
                 'description' => $document->description,
+                'uploader' => $document->uploader,
             ]);
         }
 

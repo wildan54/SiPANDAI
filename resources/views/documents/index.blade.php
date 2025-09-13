@@ -93,7 +93,7 @@
               <th style="width: 15%">Tipe Dokumen</th>
               <th style="width: 15%">Unit</th>
               <th style="width: 10%">Tahun</th>
-              <th style="width: 12%">Sumber File</th>
+              <th style="width: 12%">Uploader</th>
               <th style="width: 15%" class="text-center">Aksi</th>
             </tr>
           </thead>
@@ -110,13 +110,7 @@
                   <span class="badge badge-secondary">{{ $doc->upload_date->format('Y') }}</span>
                 </td>
                 <td>
-                  @if($doc->isUpload())
-                    <span class="badge badge-primary">Upload File</span>
-                  @elseif($doc->isEmbed())
-                    <span class="badge badge-success">Cloud Embed</span>
-                  @else
-                    <span class="badge badge-secondary">Tidak Ada</span>
-                  @endif
+                  <span class="badge">{{ $doc->uploader->name ?? '-' }}</span>
                 </td>
                 <td class="text-center">
                   <a href="javascript:void(0)" 

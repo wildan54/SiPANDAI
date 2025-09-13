@@ -75,9 +75,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
     // Route untuk publik tidak perlu login
     // Halaman publik
-    Route::prefix('/dokumen')->group(function () {
-    Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('public.documents.show');
-    Route::get('/download/{slug}', [PublicDocumentController::class, 'download'])->name('public.documents.download');
+    Route::prefix('/dokumen')->name('public.')->group(function () {
+    Route::get('/download/{slug}', [PublicDocumentController::class, 'download'])->name('documents.download');
+    Route::get('/tipe/{slug}', [PublicDocumentController::class, 'types'])->name('documents.by-type');
+    Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('documents.show');
 });
     Route::get('/', [PublicDocumentController::class, 'index'])->name('public.home');
 

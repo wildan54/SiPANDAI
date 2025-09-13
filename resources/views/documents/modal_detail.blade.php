@@ -76,7 +76,8 @@ $(function () {
                 <li><strong>Kategori</strong> : ${data.type?.name ?? '-'}</li>
                 <li><strong>Bidang</strong> : ${data.unit?.name ?? '-'}</li>
                 <li><strong>Tahun</strong> : ${data.upload_date_year ?? '-'}</li>
-                <li><strong>Diunggah</strong> : ${data.upload_date_formatted ?? '-'}</li><br>
+                <li><strong>Tanggal Unggah</strong> : ${data.upload_date_formatted ?? '-'}</li>
+                <li></li><strong>Diunggah Oleh</strong> : ${data.uploader?.name ?? '-'}</li>
             `);
 
             $('#docDescription').text(data.description ?? 'Tidak ada deskripsi');

@@ -3,8 +3,10 @@
   <div class="d-flex align-items-center">
     <i class="bi bi-file-earmark-text fs-1 text-white me-2"></i>
     <div>
-      <h5 class="mb-0 text-white">Portal SiPANDAI</h5>
-      <small class="text-light">Sistem Informasi Publikasi dan Arsip Dokumen Informasi</small>
+      <a href="{{ route('public.home') }}" class="text-decoration-none">
+        <h5 class="mb-0 text-white">Portal SiPANDAI</h5>
+        <small class="text-light">Sistem Informasi Publikasi dan Arsip Dokumen Informasi</small>
+      </a>
     </div>
   </div>
 
