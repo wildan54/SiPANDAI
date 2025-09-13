@@ -9,7 +9,7 @@ use App\Http\Controllers\Administrator\DocumentTypeController;
 use  App\Http\Controllers\Administrator\UserController;
 use App\Http\Controllers\Administrator\DocumentCategoryController;
 use App\Http\Controllers\Public\DocumentController as PublicDocumentController;
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Refresh captcha publik (tidak perlu login)
 Route::get('captcha-refresh', function () {
@@ -20,10 +20,8 @@ Route::get('captcha-refresh', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard
-    Route::get('admin/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
+    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
     // Dokumen
     Route::prefix('admin/dokumen')->name('documents.')->group(function () {
         // Dokumen utama
