@@ -13,10 +13,19 @@ class DocumentController extends Controller
 {
     public function index(Request $request)
     {
-        // Query awal
+        // Query awal + relasi
         $query = Document::query()->with(['type', 'unit']);
 
-        // Filter kategori (lewat join document_types)
+        // 🔍 Search (judul, keywords, deskripsi)
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('title', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%");
+            });
+        }
+
+        // Filter kategori (via relasi type → category)
         if ($request->filled('category')) {
             $query->whereHas('type', function ($q) use ($request) {
                 $q->where('document_category_id', $request->category);
@@ -40,17 +49,13 @@ class DocumentController extends Controller
 
         // Sorting
         if ($request->filled('sort')) {
-            if ($request->sort == 'latest') {
-                $query->orderBy('upload_date', 'desc');
-            } else {
-                $query->orderBy('upload_date', 'asc');
-            }
+            $query->orderBy('upload_date', $request->sort === 'oldest' ? 'asc' : 'desc');
         } else {
             $query->latest('upload_date');
         }
 
         // Ambil data dengan pagination
-        $documents = $query->paginate(6)->withQueryString();
+        $documents = $query->paginate(1)->withQueryString();
 
         // Data untuk filter
         $categories = DocumentCategory::all();
@@ -60,7 +65,6 @@ class DocumentController extends Controller
 
         return view('public.home', compact('documents', 'categories', 'types', 'units', 'years'));
     }
-
 
     public function show($slug)
     {
@@ -77,7 +81,7 @@ class DocumentController extends Controller
             ->get();
 
         // Ambil semua dokumen dalam kategori yang sama
-        $sameCategoryTypes = \App\Models\DocumentType::with('category')
+        $sameCategoryTypes = DocumentType::with('category')
             ->where('document_category_id', $document->type->document_category_id)
             ->get();
 
@@ -87,6 +91,36 @@ class DocumentController extends Controller
             'otherDocuments' => $otherDocuments
         ]);
     }
+
+    public function download($slug)
+    {
+        // Cari dokumen berdasarkan slug
+        $document = Document::where('slug', $slug)->firstOrFail();
+
+        // Pastikan ada link file
+        if (!$document->file_embed) {
+            return back()->with('error', 'Link dokumen tidak tersedia.');
+        }
+
+        // Jika link Google Drive → ubah ke link download langsung
+        if (str_contains($document->file_embed, 'drive.google.com')) {
+            if (preg_match('/\/d\/(.*?)\//', $document->file_embed, $match)) {
+                $fileId = $match[1];
+                $downloadUrl = "https://drive.google.com/uc?export=download&id={$fileId}";
+                return redirect()->away($downloadUrl);
+            }
+        }
+
+        // Jika link Nextcloud → tambahkan /download kalau belum ada
+        if (str_contains($document->file_embed, 'nextcloud')) {
+            $downloadUrl = rtrim($document->file_embed, '/') . '/download';
+            return redirect()->away($downloadUrl);
+        }
+
+        // Default → langsung redirect ke link yang disimpan
+        return redirect()->away($document->file_embed);
+    }
+
 
     public function types($typeslug)
     {
@@ -101,7 +135,4 @@ class DocumentController extends Controller
 
         return view('public.documents.by-type', compact('type', 'documents'));
     }
-
 }
-
-

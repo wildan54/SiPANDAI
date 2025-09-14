@@ -4,17 +4,37 @@
     <i class="bi bi-file-earmark-text fs-1 text-white me-2"></i>
     <div>
       <a href="{{ route('public.home') }}" class="text-decoration-none">
-        <h5 class="mb-0 text-white">Portal SiPANDAI</h5>
+        <h2 class="mb-0 fw-bold" style="color: #FEBC2F;">Portal SiPANDAI</h2>
         <small class="text-light">Sistem Informasi Publikasi dan Arsip Dokumen Informasi</small>
       </a>
     </div>
   </div>
 
   <!-- Kanan: Search -->
-  <div class="input-group search-box">
-    <input type="text" class="form-control" placeholder="Cari Dokumen, Kata Kunci">
-    <button class="btn btn-outline-light">
-        <i class="bi bi-search"></i> Cari
-    </button>
-  </div>
+  <form action="{{ route('public.home') }}" method="GET" class="input-group search-box">
+      <input type="text" name="q" class="form-control" 
+            placeholder="Cari Dokumen, Kata Kunci" value="{{ request('q') }}">
+
+      <!-- Hidden fields untuk mempertahankan filter -->
+      @if(request('type'))
+          <input type="hidden" name="type" value="{{ request('type') }}">
+      @endif
+      @if(request('unit'))
+          <input type="hidden" name="unit" value="{{ request('unit') }}">
+      @endif
+      @if(request('year'))
+          <input type="hidden" name="year" value="{{ request('year') }}">
+      @endif
+      @if(request('sort'))
+          <input type="hidden" name="sort" value="{{ request('sort') }}">
+      @endif
+      @if(request('category'))
+          <input type="hidden" name="category" value="{{ request('category') }}">
+      @endif
+
+      <button class="btn btn-outline-light" type="submit">
+          <i class="bi bi-search"></i> Cari
+      </button>
+  </form>
+
 </div>

@@ -14,7 +14,7 @@
     <div class="col-lg-8">
         <div class="card card-custom p-4">
             <div class="d-flex mb-3 align-items-start">
-                <i class="bi bi-file-earmark-text fs-2 text-primary me-3"></i>
+                <i class="bi bi-file-earmark-text fs-2 me-3" style="color: #030F6B;"></i>
                 <div class="flex-grow-1">
                     <!-- Judul -->
                     <h3 class="mb-2 fw-bold">{{ $document->title }}</h3>
@@ -26,40 +26,74 @@
                         <span class="badge bg-light text-dark">{{ $document->year }}</span>
                     </div>
 
-                    <!-- Deskripsi -->
-                    <p class="small text-muted mb-2">{{ $document->description }}</p>
-                </div>
+                    <!-- Kolom Detail Dokumen -->
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered table-sm">
+                            <tbody>
+                                <tr>
+                                    <th width="200">Tipe Dokumen</th>
+                                    <td>{{ $document->type->name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Unit</th>
+                                    <td>{{ $document->unit->name ?? '-' }}</td>
+                                <tr>
+                                <tr>
+                                    <th>Tahun</th>
+                                    <td>{{ $document->year }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <!-- Tanggal unggah -->
-                <div class="text-end">
-                    <small class="text-muted">Diunggah: {{ $document->upload_date->format('d/m/Y') }}</small>
+
+                    <!-- Deskripsi -->
+                    
+                    <p class="small text-muted mb-2">{{ $document->description }}</p>
+
+                    <!-- Tanggal unggah + Tombol Aksi -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                        <!-- Tanggal di kiri -->
+                        <small class="text-muted">Diunggah: {{ $document->upload_date->format('d/m/Y') }}</small>
+
+                        <!-- Tombol di kanan -->
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('public.documents.download', $document->slug) }}" class="btn btn-download">
+                                <i class="bi bi-download"></i> Unduh
+                            </a>
+                            <a href="{{ $document->file_embed }}" target="_blank" class="btn btn-secondary">
+                                <i class="bi bi-eye"></i> Preview
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Preview Dokumen -->
+            {{-- <!-- Preview Dokumen -->
             <div class="border rounded" style="height: 600px; width: 100%;">
                 <iframe id="docEmbed" width="100%" height="100%" frameborder="0"></iframe>
-            </div>
-
-            <!-- Tombol Aksi -->
-            <div class="d-flex gap-2 mt-4 mb-4">
-                <a href="{{ route('public.documents.download', $document->id) }}" class="btn btn-download">
-                    <i class="bi bi-download"></i> Unduh
-                </a>
-                <a href="{{ route('public.home') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Kembali
-                </a>
-            </div>
+            </div> --}}
         </div>
     </div>
 
     <!-- Kolom Quick Access Dokumen Lainnya -->
     <div class="col-lg-4">
-        @include('components.quick-access-card', [
+        {{-- Dokumen serupa --}}
+        @include('components.quick-access-documents-card', [
             'documents' => $otherDocuments,
-            'title_1' => 'Dokumen Serupa'
+            'title_1' => 'Dokumen Serupa',
+            'dropdown' => true,
+            'id' => 'collapseSimilarDocs'
+        ])
+
+        {{-- Tipe dokumen dalam kategori yg sama --}}
+        @include('components.quick-access-types-card', [
+            'types' => $sameCategoryTypes,
+            'title' => $document->type->category->name,
+            'id' => 'collapseCategoryDocs'
         ])
     </div>
+</div>
 </div>
 
 <!-- Script Embed Dokumen -->

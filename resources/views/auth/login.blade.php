@@ -28,8 +28,26 @@
         <div class="w-full max-w-lg bg-white p-12 rounded-3xl shadow-xl">
             <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Login</h1>
 
-            <!-- Session Status -->
+            <!-- ✅ Session Status (contoh: "Password reset berhasil") -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
+
+            <!-- ✅ Global Error (contoh: login gagal) -->
+            @if (session('error'))
+                <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            <!-- ✅ Semua Error (opsional, bisa dihapus kalau tidak mau list semua error sekaligus) -->
+            @if ($errors->any())
+                <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+                    <ul class="list-disc pl-5 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
@@ -37,8 +55,8 @@
                 <!-- Email -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input id="email" type="email" name="email" :value="old('email')" required autofocus
-                           class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
+                           class="w-full px-5 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }}"
                            placeholder="you@example.com">
                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-600" />
                 </div>
@@ -47,7 +65,7 @@
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <input id="password" type="password" name="password" required
-                           class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                           class="w-full px-5 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}"
                            placeholder="••••••••">
                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-600" />
                 </div>
@@ -61,7 +79,7 @@
                                 class="px-3 py-1 text-sm bg-gray-200 rounded-lg hover:bg-gray-300 transition">↻</button>
                     </div>
                     <input id="captcha" type="text" name="captcha" placeholder="Masukkan captcha" required
-                           class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                           class="w-full px-5 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition border-gray-300">
                     <x-input-error :messages="$errors->get('captcha')" class="mt-2 text-sm text-red-600" />
                 </div>
 

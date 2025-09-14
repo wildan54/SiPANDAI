@@ -15,7 +15,7 @@
       <div class="col-md-6 mb-4">
         <div class="card card-custom p-3">
           <div class="d-flex">
-            <i class="bi bi-file-earmark-text fs-2 text-primary me-3"></i>
+            <i class="bi bi-file-earmark-text fs-2 me-3" style="color: #030F6B"></i>
             <div>
               <h6 class="mb-1">{{ $doc->title }}</h6>
               <p class="small text-muted mb-2">{{ Str::limit($doc->description, 120) }}</p>
@@ -45,8 +45,36 @@
   </div>
 
   <!-- Pagination -->
-  <div class="mt-3">
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <small class="text-muted">
+        Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
+    </small>
     {{ $documents->links() }}
-  </div>
+</div>
+<style>
+  .pagination {
+  justify-content: center; /* selalu ditengah */
+}
+
+.page-item .page-link {
+  border-radius: 8px;
+  margin: 0 4px;
+  color: #030F6B; /* warna utama */
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease-in-out;
+}
+
+.page-item .page-link:hover {
+  background-color: #FEBC2F;
+  border-color: #FEBC2F;
+  color: #fff;
+}
+
+.page-item.active .page-link {
+  background-color: #030F6B;
+  border-color: #030F6B;
+  color: #fff;
+}
+</style>
 
 @endsection

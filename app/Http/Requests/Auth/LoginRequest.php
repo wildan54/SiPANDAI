@@ -29,7 +29,21 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            'captcha' => ['required', 'captcha'], 
+            'captcha' => ['required', 'captcha'],
+        ];
+    }
+
+    /**
+     * Custom error messages for validation rules.
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Password tidak boleh kosong.',
+            'captcha.required' => 'Captcha wajib diisi.',
+            'captcha.captcha' => 'Captcha salah, silakan coba lagi.',
         ];
     }
 
@@ -46,7 +60,8 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                // Custom pesan gagal login
+                'email' => 'Email atau password yang kamu masukkan salah.',
             ]);
         }
 
@@ -69,10 +84,8 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            // Custom pesan throttle
+            'email' => "Terlalu banyak percobaan login. Coba lagi dalam $seconds detik.",
         ]);
     }
 
