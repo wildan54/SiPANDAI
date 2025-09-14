@@ -51,6 +51,7 @@
     </small>
     {{ $documents->links() }}
 </div>
+
 <style>
   .pagination {
   justify-content: center; /* selalu ditengah */
