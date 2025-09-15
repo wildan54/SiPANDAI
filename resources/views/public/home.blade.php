@@ -1,6 +1,6 @@
 @extends('public.layouts.app')
 
-@section('title', 'Dokumen Publik')
+@section('title', 'Home')
 
 @section('content')
 
@@ -12,13 +12,22 @@
   <!-- Grid Dokumen -->  
   <div class="row">
     @forelse($documents as $doc)
-      <div class="col-md-6 mb-4">
-        <div class="card card-custom p-3">
-          <div class="d-flex">
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card card-custom p-3 h-100 d-flex flex-column">
+
+          <!-- Icon + Konten -->
+          <div class="d-flex mb-2">
             <i class="bi bi-file-earmark-text fs-2 me-3" style="color: #030F6B"></i>
-            <div>
-              <h6 class="mb-1">{{ $doc->title }}</h6>
-              <p class="small text-muted mb-2">{{ Str::limit($doc->description, 120) }}</p>
+            <div class="flex-grow-1">
+              <!-- Judul -->
+              <h6 class="mb-1 fw-bold text-truncate-2" title="{{ $doc->title }}">
+                {{ $doc->title }}
+              </h6>
+              <!-- Deskripsi -->
+              <p class="small text-muted mb-2 text-truncate-3">
+                {{ $doc->description }}
+              </p>
+              <!-- Badge -->
               <div class="mb-2">
                 <span class="badge bg-light text-dark">{{ $doc->year }}</span>
                 <span class="badge bg-light text-dark">{{ $doc->unit->name ?? '-' }}</span>
@@ -26,7 +35,9 @@
               </div>
             </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center mt-2">
+
+          <!-- Footer -->
+          <div class="mt-auto d-flex justify-content-between align-items-center">
             <small class="text-muted">Diunggah: {{ $doc->upload_date->format('d/m/Y') }}</small>
             <div class="d-flex gap-2">
               <a href="{{ route('public.documents.download', $doc->slug) }}" class="btn btn-sm btn-download">
@@ -37,6 +48,7 @@
               </a>
             </div>
           </div>
+
         </div>
       </div>
     @empty
@@ -44,37 +56,82 @@
     @endforelse
   </div>
 
+
   <!-- Pagination -->
-<div class="d-flex justify-content-between align-items-center mt-4">
+  <div class="d-flex justify-content-between align-items-center mt-4 flex-column flex-md-row gap-2">
     <small class="text-muted">
-        Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
+      Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
     </small>
     {{ $documents->links() }}
-</div>
+  </div>
 
+  <!-- Custom CSS -->
 <style>
-  .pagination {
-  justify-content: center; /* selalu ditengah */
+/* Batasi tinggi card & isi flex agar tombol selalu di bawah */
+.card-custom {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.page-item .page-link {
-  border-radius: 8px;
-  margin: 0 4px;
-  color: #030F6B; /* warna utama */
-  border: 1px solid #dee2e6;
-  transition: all 0.2s ease-in-out;
+.card-custom:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
-.page-item .page-link:hover {
+/* Atur teks supaya tidak melewati card */
+.card-custom h6,
+.card-custom p,
+.card-custom span {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Judul max 2 baris */
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Deskripsi max 3 baris */
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tombol */
+.btn-download {
   background-color: #FEBC2F;
-  border-color: #FEBC2F;
+  color: #000;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-download:hover {
+  background-color: #e0a800;
   color: #fff;
 }
 
-.page-item.active .page-link {
+.btn-view {
   background-color: #030F6B;
-  border-color: #030F6B;
   color: #fff;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-view:hover {
+  background-color: #04127a;
 }
 </style>
 

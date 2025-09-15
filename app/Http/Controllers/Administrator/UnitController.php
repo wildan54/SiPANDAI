@@ -13,8 +13,8 @@ class UnitController extends Controller
         public function index()
     {
         $units = Unit::withCount('documents')
-                    ->latest()
-                    ->paginate(10);
+             ->latest()
+             ->get();
 
         return view('bidang.index', compact('units'));
     }

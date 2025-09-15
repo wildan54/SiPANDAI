@@ -1,6 +1,6 @@
 @extends('public.layouts.app')
 
-@section('title', 'Detail Dokumen')
+@section('title', "Detail Dokumen - {$document->title}")
 
 @section('content')
 

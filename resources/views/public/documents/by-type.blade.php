@@ -1,6 +1,6 @@
 @extends('public.layouts.app')
 
-@section('title', $type->name)
+@section('title', "Tipe Dokumen - {$type->name}")
 
 @section('content')
 <div class="container py-4">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SiPANDAI - Tipe Dokumen')
+@section('title', 'Tipe Dokumen')
 
 @section('content')
 <!-- Content Header (Page header) -->
