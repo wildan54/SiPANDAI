@@ -9,7 +9,6 @@ use App\Http\Controllers\Administrator\DocumentTypeController;
 use  App\Http\Controllers\Administrator\UserController;
 use App\Http\Controllers\Administrator\DocumentCategoryController;
 use App\Http\Controllers\Public\DocumentController as PublicDocumentController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Refresh captcha publik (tidak perlu login)
 Route::get('captcha-refresh', function () {
@@ -28,6 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DocumentController::class, 'index'])->name('index');
         Route::get('/dokumen-baru', [DocumentController::class, 'create'])->name('create');
         Route::post('/', [DocumentController::class, 'store'])->name('store');
+
+        // Cek slug harus sebelum catch-all
+        Route::get('/check-slug', [DocumentController::class, 'checkSlug'])->name('checkSlug');
 
         // Kategori Dokumen
         Route::get('/kategori', [DocumentCategoryController::class, 'index'])->name('category.categories');
@@ -48,7 +50,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{document}', [DocumentController::class, 'update'])->name('update');
     });
 
-    
 
     // Bidang / Unit
     Route::prefix('admin/bidang')->name('bidang.')->group(function () {

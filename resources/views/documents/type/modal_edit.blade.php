@@ -21,7 +21,7 @@
             <label for="slug{{ $type->id }}">Slug <span class="text-danger">*</span></label>
             <input type="text" name="slug" id="slug{{ $type->id }}" value="{{ $type->slug }}" class="form-control" required>
             <small class="form-text text-muted">
-              “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung.
+              “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung. Jika dikosongkan, slug akan dibuat otomatis berdasarkan nama tipe.
             </small>
           </div>
           <div class="form-group">

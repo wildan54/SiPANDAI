@@ -135,6 +135,22 @@ class DocumentController extends Controller
         return redirect()->route('documents.index')->with('success', 'Dokumen berhasil diperbarui.');
     }
 
+    public function checkSlug(Request $request)
+    {
+        $slug = $request->query('slug');
+        $id   = $request->query('id'); // opsional, dipakai saat edit
+
+        if (!$slug) {
+            return response()->json(['exists' => false]);
+        }
+
+        $exists = Document::where('slug', $slug)
+            ->when($id, fn($q) => $q->where('id', '!=', $id))
+            ->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
+
     /**
      * Show dokumen (detail / preview).
      */

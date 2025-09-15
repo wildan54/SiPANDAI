@@ -38,7 +38,7 @@
                 <label for="slug">Slug <span class="text-danger">*</span></label>
                 <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-bidang">
                 <small class="form-text text-muted">
-                  “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung.
+                  “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung. Jika dikosongkan, slug akan dibuat otomatis dari nama bidang.
                 </small>
               </div>
               <div class="form-group">

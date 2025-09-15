@@ -3,34 +3,31 @@
 @section('title', 'Edit Dokumen')
 
 @section('content')
-<!-- Content Header (Page header) -->
+<!-- Content Header -->
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0">Edit Dokumen</h1>
-      </div><!-- /.col -->
+      </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
           <li class="breadcrumb-item active">Edit Dokumen</li>
         </ol>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
+      </div>
+    </div>
+  </div>
 </div>
-<!-- /.content-header -->
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Form Edit Dokumen</h3>
-                </div>
+                <div class="card-header"><h3 class="card-title">Form Edit Dokumen</h3></div>
                 <form action="{{ route('documents.update', $document->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-
                     <div class="card-body">
 
                         {{-- Judul --}}
@@ -97,6 +94,10 @@
                             <input type="text" class="form-control" id="slug" name="slug" 
                                    value="{{ old('slug', $document->slug) }}" 
                                    placeholder="contoh: surat-keputusan-2025">
+                            <small id="slug-feedback" class="text-danger"></small>
+                            <small class="form-text text-muted">
+                                Slug diisi otomatis dari judul tapi bisa diubah manual. Hanya boleh huruf kecil, angka, dan strip (-).
+                            </small>
                         </div>
 
                         {{-- Meta Title --}}
@@ -113,9 +114,7 @@
                             <textarea class="form-control" id="meta_description" name="meta_description" rows="3" placeholder="Masukkan meta description (SEO)">{{ old('meta_description', $document->meta_description) }}</textarea>
                         </div>
 
-                        {{-- Hidden file_source --}}
                         <input type="hidden" name="file_source" value="embed">
-
                     </div>
 
                     <div class="card-footer">
@@ -128,3 +127,54 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let titleInput = document.getElementById('title');
+    let slugInput  = document.getElementById('slug');
+    let feedback   = document.getElementById('slug-feedback');
+    let slugEdited = false;
+
+    function slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
+
+    // Jika slug sama dengan slugify dari judul, berarti belum diedit manual
+    if (slugInput.value !== slugify(titleInput.value)) {
+        slugEdited = false; // masih bisa auto-generate jika judul diganti
+    }
+
+    // Event saat judul diubah
+    titleInput.addEventListener('input', function() {
+        if (!slugEdited) {
+            slugInput.value = slugify(this.value);
+            checkSlug(slugInput.value);
+        }
+    });
+
+    // Event saat slug diubah manual
+    slugInput.addEventListener('input', function() {
+        slugEdited = true; // menandai user sudah mengedit slug
+        checkSlug(this.value);
+    });
+
+    function checkSlug(slug) {
+        let docId = "{{ $document->id }}";
+        fetch(`{{ route('documents.checkSlug') }}?slug=${encodeURIComponent(slug)}&id=${docId}`)
+            .then(res => res.json())
+            .then(data => {
+                feedback.textContent = data.exists ? "⚠️ Slug sudah dipakai dokumen lain." : "";
+            });
+    }
+
+    // cek awal saat load halaman
+    checkSlug(slugInput.value);
+});
+</script>
+@endpush

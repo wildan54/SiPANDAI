@@ -21,7 +21,8 @@
             <div class="flex-grow-1">
               <!-- Judul -->
               <h6 class="mb-1 fw-bold text-truncate-2" title="{{ $doc->title }}">
-                {{ $doc->title }}
+                  {{ $doc->title }}
+                  {{-- {{ $doc->year ? ' - ' . $doc->year : '' }} --}}
               </h6>
               <!-- Deskripsi -->
               <p class="small text-muted mb-2 text-truncate-3">

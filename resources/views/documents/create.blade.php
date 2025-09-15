@@ -94,6 +94,10 @@
                         <div class="form-group">
                             <label for="slug">Slug <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}" placeholder="contoh: surat-keputusan-2025">
+                            <small class="form-text text-muted">
+                                Slug diisi otomatis berdasarkan judul, 
+                                tapi bisa juga diubah sesuai kebutuhan. Hanya boleh mengandung huruf kecil, angka, dan strip (-).
+                            </small>
                         </div>
 
                         {{-- Meta Title --}}
@@ -123,3 +127,54 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let titleInput = document.getElementById('title');
+    let slugInput  = document.getElementById('slug');
+    let feedback   = document.createElement('small');
+    feedback.classList.add('text-danger');
+    slugInput.parentNode.appendChild(feedback);
+
+    let slugEdited = false; // flag apakah user sudah edit slug manual?
+
+    // Fungsi buat generate slug dari judul
+    function slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')        // ganti spasi dengan -
+            .replace(/[^\w\-]+/g, '')    // hapus karakter non-word
+            .replace(/\-\-+/g, '-')      // ganti -- jadi -
+            .replace(/^-+/, '')          // hapus - di awal
+            .replace(/-+$/, '');         // hapus - di akhir
+    }
+
+    // Isi slug otomatis saat judul diisi, kecuali kalau user sudah edit slug
+    titleInput.addEventListener('input', function() {
+        if (!slugEdited) {
+            slugInput.value = slugify(this.value);
+            checkSlug(slugInput.value);
+        }
+    });
+
+    // Kalau user edit slug manual, set flag = true
+    slugInput.addEventListener('input', function() {
+        slugEdited = true;
+        checkSlug(this.value);
+    });
+
+    // Cek slug ke server (tanpa id exclude karena create)
+    function checkSlug(slug) {
+        fetch(`{{ route('documents.checkSlug') }}?slug=${slug}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.exists) {
+                    feedback.textContent = "⚠️ Slug sudah dipakai dokumen lain.";
+                } else {
+                    feedback.textContent = "";
+                }
+            });
+    }
+});
+</script>
+@endpush
