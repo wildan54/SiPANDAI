@@ -1,6 +1,6 @@
 <footer class="text-white pt-5 pb-4 mt-5 px-5 rounded-top-3 p-3" style="background-color:#0a1a74;">
     
-    <div class="row gy-4">
+    <div class="row gy-4 gx-5">
       <!-- Logo & Deskripsi -->
       <div class="col-lg-6">
         <div class="d-flex align-items-center mb-3">
@@ -12,8 +12,8 @@
           </a>
         </div>
         <p class="small mb-0">
-          SiPANDAI adalah portal milik Dinas Pekerjaan Umum, Perumahan dan Kawasan Permukiman Kabupaten Ponorogo. 
-          Portal ini mempublikasikan dokumen-dokumen dinas yang dapat diakses oleh publik.
+          SiPANDAI adalah portal milik Dinas Pekerjaan Umum, Perumahan dan Kawasan Permukiman 
+          Kabupaten Ponorogo. Portal ini mempublikasikan dokumen-dokumen dinas yang dapat diakses oleh publik.
         </p>
       </div>
 
