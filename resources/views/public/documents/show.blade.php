@@ -5,9 +5,29 @@
 @section('content')
 
 <!-- Judul Halaman -->
-<h4 class="fw-bold mb-3">
-    DETAIL <span class="text-warning">DOKUMEN</span>
-</h4>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h4 class="fw-bold mb-3">
+                DETAIL <span class="text-warning">DOKUMEN</span>
+            </h4>
+        </div><!-- /.col -->
+        <div class="col-sm-6 text-sm-end">
+        <ol class="breadcrumb float-sm-end mb-0">
+            <li class="breadcrumb-item">
+            <a href="{{ route('dashboard') }}" class="text-dark text-decoration-none fw-bold">
+                <i class="bi bi-house-door"></i> Home
+            </a>
+            </li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">
+                Detail Dokumen
+            </li>
+        </ol>
+        </div>
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
 
 <div class="row">
     <!-- Kolom Detail Dokumen -->

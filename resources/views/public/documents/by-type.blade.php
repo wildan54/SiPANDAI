@@ -3,11 +3,34 @@
 @section('title', "Tipe Dokumen - {$type->name}")
 
 @section('content')
-<div class="container py-4">
-  <!-- Judul -->
-  <h4 class="fw-bold mb-3">
-    DOKUMEN <span class="text" style="color: #FEBC2F;">{{ strtoupper($type->name) }}</span>
-  </h4>
+
+  <!-- Judul Halaman -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+          <div class="col-sm-6">
+              <h4 class="fw-bold mb-3">
+                    DOKUMEN <span class="text" style="color: #FEBC2F;">{{ strtoupper($type->name) }}</span>
+              </h4>
+          </div><!-- /.col -->
+          <div class="col-sm-6 text-sm-end">
+          <ol class="breadcrumb float-sm-end mb-0">
+              <li class="breadcrumb-item">
+              <a href="{{ route('dashboard') }}" class="text-dark text-decoration-none fw-bold">
+                  <i class="bi bi-house-door"></i> Home
+              </a>
+              </li>
+              <li class="breadcrumb-item active fw-bold" aria-current="page">
+                  Dokumen
+              </li>
+              <li class="breadcrumb-item active fw-bold" aria-current="page">
+                  {{ $type->name }}
+              </li>
+          </ol>
+          </div>
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
 
   <!-- Grid Dokumen -->  
   <div class="row">
@@ -50,7 +73,6 @@
   <div class="mt-3">
     {{ $documents->links() }}
   </div>
-</div>
 @endsection
 
 @push('styles')

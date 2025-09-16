@@ -6,8 +6,26 @@
 
   @include('public.partials.filter')
 
-  <!-- Judul -->
-  <h4 class="fw-bold mb-3">DOKUMEN <span class="text" style="color: #FEBC2F;">PUBLIK</span></h4>
+  <!-- Judul Halaman -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h4 class="fw-bold mb-3">
+              DOKUMEN <span class="text-warning">PUBLIK</span>
+          </h4>
+        </div><!-- /.col -->
+        <div class="col-sm-6 text-sm-end">
+        <ol class="breadcrumb float-sm-end mb-0">
+            <li class="breadcrumb-item">
+            <a href="{{ route('dashboard') }}" class="text-dark text-decoration-none fw-bold">
+                <i class="bi bi-house-door"></i> Home
+            </a>
+        </ol>
+        </div>
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
 
   <!-- Grid Dokumen -->  
   <div class="row">

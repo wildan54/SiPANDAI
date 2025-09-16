@@ -1,13 +1,12 @@
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 p-3 px-5 sticky-top" style="background-color: #030F6B;">
-  <!-- Kiri: Logo + Judul -->
+  <!-- Kiri: Logo -->
   <div class="d-flex align-items-center mb-3 mb-md-0">
-    <i class="bi bi-file-earmark-text fs-1 text-white me-2"></i>
-    <div>
-      <a href="{{ route('public.home') }}" class="text-decoration-none">
-        <h2 class="mb-0 fw-bold" style="color: #FEBC2F;">Portal SiPANDAI</h2>
-        <small class="text-light">Sistem Informasi Publikasi dan Arsip Dokumen Informasi</small>
-      </a>
-    </div>
+    <a href="{{ route('public.home') }}" class="text-decoration-none">
+      <img src="{{ asset('images/Logo-SiPANDAI.png') }}" 
+           alt="Portal SiPANDAI" 
+           class="img-fluid" 
+           style="max-height: 50px;">
+    </a>
   </div>
 
   <!-- Kanan: Search -->
