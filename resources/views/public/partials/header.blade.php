@@ -1,6 +1,6 @@
-<div class="d-flex justify-content-between align-items-center mb-4 p-3 px-5 sticky-top" style="background-color: #030F6B;">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 p-3 px-5 sticky-top" style="background-color: #030F6B;">
   <!-- Kiri: Logo + Judul -->
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center mb-3 mb-md-0">
     <i class="bi bi-file-earmark-text fs-1 text-white me-2"></i>
     <div>
       <a href="{{ route('public.home') }}" class="text-decoration-none">
@@ -11,11 +11,11 @@
   </div>
 
   <!-- Kanan: Search -->
-  <form action="{{ route('public.home') }}" method="GET" class="input-group search-box">
+  <form action="{{ route('public.home') }}" method="GET" class="input-group search-box w-100 w-md-auto">
       <input type="text" name="q" class="form-control" 
             placeholder="Cari Dokumen, Kata Kunci" value="{{ request('q') }}">
 
-      <!-- Hidden fields untuk mempertahankan filter -->
+      <!-- Hidden fields -->
       @if(request('type'))
           <input type="hidden" name="type" value="{{ request('type') }}">
       @endif
@@ -36,5 +36,4 @@
           <i class="bi bi-search"></i> Cari
       </button>
   </form>
-
 </div>

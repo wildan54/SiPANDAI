@@ -55,7 +55,7 @@ class DocumentController extends Controller
         }
 
         // Ambil data dengan pagination
-        $documents = $query->paginate(10)->withQueryString();
+        $documents = $query->paginate(12)->withQueryString();
 
         // Data untuk filter
         $categories = DocumentCategory::all();

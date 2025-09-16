@@ -17,47 +17,47 @@
                 <i class="bi bi-file-earmark-text fs-2 me-3" style="color: #030F6B;"></i>
                 <div class="flex-grow-1">
                     <!-- Judul -->
-                    <h3 class="mb-2 fw-bold">{{ $document->title }}</h3>
+                    <h3 class="mb-2 fw-bold text-break">{{ $document->title }}</h3>
 
                     <!-- Badges: Unit, Tipe, Tahun -->
-                    <div class="mb-2">
-                        <span class="badge bg-light text-dark">{{ $document->unit->name ?? '-' }}</span>
-                        <span class="badge bg-light text-dark">{{ $document->type->name ?? '-' }}</span>
+                    <div class="mb-2 d-flex flex-wrap gap-1">
+                        <span class="badge bg-light text-dark text-break">{{ $document->unit->name ?? '-' }}</span>
+                        <span class="badge bg-light text-dark text-break">{{ $document->type->name ?? '-' }}</span>
                         <span class="badge bg-light text-dark">{{ $document->year }}</span>
                     </div>
 
                     <!-- Kolom Detail Dokumen -->
                     <div class="table-responsive mt-3">
-                        <table class="table table-bordered table-sm">
+                        <table class="table table-bordered table-sm text-wrap">
                             <tbody>
                                 <tr>
-                                    <th width="200">Tipe Dokumen</th>
-                                    <td>{{ $document->type->name ?? '-' }}</td>
+                                    <th class="text-break">Tipe Dokumen</th>
+                                    <td class="text-break">{{ $document->type->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Unit</th>
-                                    <td>{{ $document->unit->name ?? '-' }}</td>
+                                    <th class="text-break">Unit</th>
+                                    <td class="text-break">{{ $document->unit->name ?? '-' }}</td>
+                                </tr>
                                 <tr>
-                                <tr>
-                                    <th>Tahun</th>
-                                    <td>{{ $document->year }}</td>
+                                    <th class="text-break">Tahun</th>
+                                    <td class="text-break">{{ $document->year }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-
                     <!-- Deskripsi -->
-                    
-                    <p class="small text-muted mb-2">{{ $document->description }}</p>
+                    <p class="small text-muted mb-2 text-break">{{ $document->description }}</p>
 
                     <!-- Tanggal unggah + Tombol Aksi -->
                     <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
                         <!-- Tanggal di kiri -->
-                        <small class="text-muted">Diunggah: {{ $document->upload_date->format('d/m/Y') }}</small>
+                        <small class="text-muted uploaded-text">
+                            Diunggah: {{ $document->upload_date->format('d/m/Y') }}
+                        </small>
 
                         <!-- Tombol di kanan -->
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 flex-wrap">
                             <a href="{{ route('public.documents.download', $document->slug) }}" class="btn btn-download">
                                 <i class="bi bi-download"></i> Unduh
                             </a>
@@ -122,4 +122,24 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+
+// <!-- Custom Style untuk card -->
+<style>
+.card-custom h3,
+.card-custom p,
+.card-custom span,
+.card-custom td,
+.card-custom th {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Kecilkan tulisan "Diunggah" di mobile */
+@media (max-width: 576px) {
+  .uploaded-text {
+    font-size: 0.75rem; /* lebih kecil dari small (0.875rem) */
+  }
+}
+</style>
 @endsection
