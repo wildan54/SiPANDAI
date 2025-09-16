@@ -50,7 +50,7 @@
       <div class="col-md-3 mb-4">
         <div class="card shadow-sm border-0">
           <div class="card-body text-center">
-            <h6 class="text-muted">Unit</h6>
+            <h6 class="text-muted">Bidang</h6>
             <h3 class="mb-0">{{ $totalUnits ?? 0 }}</h3>
           </div>
         </div>

@@ -55,7 +55,7 @@
                                     <td class="text-break">{{ $document->type->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <th class="text-break">Unit</th>
+                                    <th class="text-break">Bidang</th>
                                     <td class="text-break">{{ $document->unit->name ?? '-' }}</td>
                                 </tr>
                                 <tr>

@@ -6,7 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Administrator\DocumentController;
 use App\Http\Controllers\Administrator\UnitController;
 use App\Http\Controllers\Administrator\DocumentTypeController;
-use  App\Http\Controllers\Administrator\UserController;
+use App\Http\Controllers\Administrator\UserController;
 use App\Http\Controllers\Administrator\DocumentCategoryController;
 use App\Http\Controllers\Public\DocumentController as PublicDocumentController;
 
@@ -50,7 +50,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{document}', [DocumentController::class, 'update'])->name('update');
     });
 
-
     // Bidang / Unit
     Route::prefix('admin/bidang')->name('bidang.')->group(function () {
         Route::get('/', [UnitController::class, 'index'])->name('index');
@@ -74,14 +73,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-    // Route untuk publik tidak perlu login
-    // Halaman publik
-    Route::prefix('/dokumen')->name('public.')->group(function () {
-    Route::get('/download/{slug}', [PublicDocumentController::class, 'download'])->name('documents.download');
-    Route::get('/tipe/{slug}', [PublicDocumentController::class, 'types'])->name('documents.by-type');
-    Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('documents.show');
+
+
+// ====================================================
+// 🔓 Route untuk publik (tidak perlu login)
+// ====================================================
+
+// Halaman utama publik (daftar dokumen + filter)
+Route::get('/', [PublicDocumentController::class, 'index'])->name('public.home');
+
+// Halaman publik dokumen
+Route::prefix('dokumen')->name('public.documents.')->group(function () {
+    // Download
+    Route::get('/download/{slug}', [PublicDocumentController::class, 'download'])->name('download');
+
+    // By Type
+    Route::get('/type/{slug}', [PublicDocumentController::class, 'types'])->name('types');
+
+    // By Category
+    Route::get('/category/{slug}', [PublicDocumentController::class, 'categories'])->name('categories');
+
+    // By Unit
+    Route::get('/unit/{slug}', [PublicDocumentController::class, 'units'])->name('units');
+
+    // Detail dokumen
+    Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('show');
 });
-    Route::get('/', [PublicDocumentController::class, 'index'])->name('public.home');
+
 
 // Auth routes (login, register, password, etc.)
 require __DIR__.'/auth.php';

@@ -82,7 +82,9 @@
                       </td>
                       <td>{{ $unit->slug }}</td>
                       <td>
-                        {{ $unit->documents_count }} <!-- ambil dari withCount -->
+                        <a href="{{ route('public.documents.units', $unit->slug) }}" class="text-primary">
+                          {{ $unit->documents_count }}
+                        </a>
                       </td>
                       <td>{{ $unit->created_at->format('d-m-Y') }}</td>
                       <td>

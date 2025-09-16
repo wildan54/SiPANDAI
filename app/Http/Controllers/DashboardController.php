@@ -34,8 +34,13 @@ class DashboardController extends Controller
         $latestTypes = Document::latest()->take(5)->get();
         
         // Chart kategori
-        $chartKategoriLabels = DocumentCategory::pluck('name'); // nama kategori
-        $chartKategoriData = DocumentCategory::withCount('documents')->pluck('documents_count'); // jumlah dokumen per kategori
+        $chartKategoriLabels = DocumentCategory::orderBy('id')->pluck('name');
+        $chartKategoriData   = DocumentCategory::withCount('documents')
+                                            ->orderBy('id')
+                                            ->pluck('documents_count');
+
+
+
 
 
         return view('dashboard', compact(

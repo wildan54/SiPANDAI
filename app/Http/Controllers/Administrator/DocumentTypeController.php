@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Controller;
 use App\Models\DocumentType;
 use App\Models\DocumentCategory;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -12,8 +13,14 @@ class DocumentTypeController extends Controller
 {
     public function index()
     {
-        $types = DocumentType::with('category')->latest()->get();
-        $categories = DocumentCategory::all();
+        $types = DocumentType::with('category')
+                    ->withCount('documents')
+                    ->latest()
+                    ->get();
+
+        $categories = DocumentCategory::withCount('documents')
+                        ->latest()
+                        ->get();
 
         return view('documents.type.types', compact('types', 'categories'));
     }
@@ -27,14 +34,13 @@ class DocumentTypeController extends Controller
             'document_category_id' => 'nullable|exists:document_categories,id',
         ]);
 
-        // jika slug kosong, buat otomatis dari name
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);
         }
 
         DocumentType::create($validated);
 
-        return redirect()->route('documents.type.types')
+        return redirect()->route('documents.types.index')
                          ->with('success', 'Tipe dokumen berhasil ditambahkan.');
     }
 
@@ -47,45 +53,39 @@ class DocumentTypeController extends Controller
             'document_category_id' => 'nullable|exists:document_categories,id',
         ]);
 
-        // jika slug kosong, buat otomatis dari name
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);
         }
 
         $documentType->update($validated);
 
-        return redirect()->route('documents.type.types')
+        return redirect()->route('documents.types.index')
                          ->with('success', 'Tipe dokumen berhasil diperbarui.');
     }
 
     public function destroy(Request $request, DocumentType $documentType)
     {
-        $action = $request->input('action'); // delete | move
+        $action = $request->input('action');
         $targetTypeId = $request->input('target_id');
 
         if ($action === 'delete') {
-            // 🔥 Hapus semua dokumen milik tipe ini
             $documentType->documents()->delete();
             $documentType->delete();
 
-            return redirect()->route('documents.type.types')
+            return redirect()->route('documents.types.index')
                 ->with('success', 'Tipe dokumen dan semua dokumennya berhasil dihapus.');
         }
 
         if ($action === 'move' && $targetTypeId) {
-            // 📦 Pindahkan dokumen ke tipe lain
-            foreach ($documentType->documents as $doc) {
-                $doc->document_type_id = $targetTypeId;
-                $doc->save();
-            }
+            Document::where('document_type_id', $documentType->id)
+                    ->update(['document_type_id' => $targetTypeId]);
 
             $documentType->delete();
 
-            return redirect()->route('documents.type.types')
+            return redirect()->route('documents.types.index')
                 ->with('success', 'Tipe dokumen berhasil dihapus dan semua dokumen dipindahkan ke tipe lain.');
         }
 
         return back()->with('error', 'Anda harus memilih aksi yang valid (hapus semua atau pindah ke tipe lain).');
     }
-
 }

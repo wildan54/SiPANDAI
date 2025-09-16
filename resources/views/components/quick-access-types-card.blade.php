@@ -9,11 +9,11 @@
         <ul class="list-group list-group-flush mt-2">
             @forelse($types as $type)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="{{ route('public.documents.by-type', $type->slug) }}" 
+                    <a href="{{ route('public.documents.types', $type->slug) }}" 
                        class="fw-semibold link-doc" style="color:#030F6B;">
                         {{ $type->name }}
                     </a>
-                    <a href="{{ route('public.documents.by-type', $type->slug) }}" 
+                    <a href="{{ route('public.documents.types', $type->slug) }}" 
                     class="btn btn-sm btn-outline-dark btn-custom-outline">
                         Lihat
                     </a>

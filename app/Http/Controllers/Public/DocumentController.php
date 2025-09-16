@@ -13,10 +13,9 @@ class DocumentController extends Controller
 {
     public function index(Request $request)
     {
-        // Query awal + relasi
         $query = Document::query()->with(['type', 'unit']);
 
-        // 🔍 Search (judul, keywords, deskripsi)
+        // 🔍 Search
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
@@ -25,19 +24,19 @@ class DocumentController extends Controller
             });
         }
 
-        // Filter kategori (via relasi type → category)
+        // Filter kategori
         if ($request->filled('category')) {
             $query->whereHas('type', function ($q) use ($request) {
                 $q->where('document_category_id', $request->category);
             });
         }
 
-        // Filter tipe dokumen
+        // Filter tipe
         if ($request->filled('type')) {
             $query->where('document_type_id', $request->type);
         }
 
-        // Filter unit / bidang
+        // Filter unit
         if ($request->filled('unit')) {
             $query->where('unit_id', $request->unit);
         }
@@ -54,10 +53,8 @@ class DocumentController extends Controller
             $query->latest('upload_date');
         }
 
-        // Ambil data dengan pagination
         $documents = $query->paginate(12)->withQueryString();
 
-        // Data untuk filter
         $categories = DocumentCategory::all();
         $types      = DocumentType::all();
         $units      = Unit::all();
@@ -68,19 +65,16 @@ class DocumentController extends Controller
 
     public function show($slug)
     {
-        // Ambil dokumen utama beserta relasi unit, type, dan category
         $document = Document::with(['unit', 'type.category'])
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // Ambil dokumen lain dengan tipe yang sama (Quick Access, max 5)
         $otherDocuments = Document::where('id', '!=', $document->id)
             ->where('document_type_id', $document->document_type_id)
             ->latest('upload_date')
             ->take(5)
             ->get();
 
-        // Ambil semua dokumen dalam kategori yang sama
         $sameCategoryTypes = DocumentType::with('category')
             ->where('document_category_id', $document->type->document_category_id)
             ->get();
@@ -94,15 +88,13 @@ class DocumentController extends Controller
 
     public function download($slug)
     {
-        // Cari dokumen berdasarkan slug
         $document = Document::where('slug', $slug)->firstOrFail();
 
-        // Pastikan ada link file
         if (!$document->file_embed) {
             return back()->with('error', 'Link dokumen tidak tersedia.');
         }
 
-        // Jika link Google Drive → ubah ke link download langsung
+        // Google Drive
         if (str_contains($document->file_embed, 'drive.google.com')) {
             if (preg_match('/\/d\/(.*?)\//', $document->file_embed, $match)) {
                 $fileId = $match[1];
@@ -111,28 +103,66 @@ class DocumentController extends Controller
             }
         }
 
-        // Jika link Nextcloud → tambahkan /download kalau belum ada
+        // Nextcloud
         if (str_contains($document->file_embed, 'nextcloud')) {
             $downloadUrl = rtrim($document->file_embed, '/') . '/download';
             return redirect()->away($downloadUrl);
         }
 
-        // Default → langsung redirect ke link yang disimpan
+        // Default
         return redirect()->away($document->file_embed);
     }
 
-
-    public function types($typeslug)
+    // 🔹 By Type
+    public function types($slug)
     {
-        // Cari tipe dokumen berdasarkan slug
-        $type = DocumentType::where('slug', $typeslug)->firstOrFail();
+        $type = DocumentType::where('slug', $slug)->firstOrFail();
 
-        // Ambil semua dokumen dengan tipe tersebut
         $documents = Document::with(['unit', 'type.category'])
             ->where('document_type_id', $type->id)
             ->latest('upload_date')
             ->paginate(10);
 
-        return view('public.documents.by-type', compact('type', 'documents'));
+        return view('public.documents.index', [
+            'documents'    => $documents,
+            'contextLabel' => 'Tipe',
+            'contextName'  => $type->name,
+        ]);
+    }
+
+    // 🔹 By Category
+    public function categories($slug)
+    {
+        $category = DocumentCategory::where('slug', $slug)->firstOrFail();
+
+        $documents = Document::with(['unit', 'type.category'])
+            ->whereHas('type', function ($q) use ($category) {
+                $q->where('document_category_id', $category->id);
+            })
+            ->latest('upload_date')
+            ->paginate(10);
+
+        return view('public.documents.index', [
+            'documents'    => $documents,
+            'contextLabel' => 'Kategori',
+            'contextName'  => $category->name,
+        ]);
+    }
+
+    // 🔹 By Unit
+    public function units($slug)
+    {
+        $unit = Unit::where('slug', $slug)->firstOrFail();
+
+        $documents = Document::with(['unit', 'type.category'])
+            ->where('unit_id', $unit->id)
+            ->latest('upload_date')
+            ->paginate(10);
+
+        return view('public.documents.index', [
+            'documents'    => $documents,
+            'contextLabel' => 'Unit',
+            'contextName'  => $unit->name,
+        ]);
     }
 }

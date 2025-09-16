@@ -82,7 +82,11 @@
                         {{ \Illuminate\Support\Str::words($category->description ?? '—', 5, '...') }}
                       </td>
                       <td>{{ $category->slug }}</td>
-                      <td>{{ $category->documents_count ?? 0 }}</td>
+                      <td>
+                        <a href="{{ route('public.documents.categories', $category->slug) }}" class="text-primary">
+                              {{$category->documents_count}}
+                        </a>
+                      </td>
                       <td>
                           <button type="button" 
                                   class="btn btn-sm btn-info" 

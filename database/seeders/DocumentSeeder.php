@@ -10,111 +10,85 @@ class DocumentSeeder extends Seeder
 {
     public function run(): void
     {
-        $data = [
+        $description = "Penyusunan Laporan Kinerja merupakan upaya pemerintah untuk mendorong tata kelola yang transparan dan akuntabel, dengan melaporkan capaian kinerja instansi dalam memberikan pelayanan publik. Laporan Kinerja Dinas PUPKP Kabupaten Ponorogo Tahun 2022 menyajikan capaian program dan kegiatan dinas sesuai dengan tugas dan fungsinya, sebagai bentuk pertanggungjawaban dan upaya peningkatan kapasitas kelembagaan.";
+
+        $documents = [
             [
-                'title' => 'Laporan Kinerja Sekretariat 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/HsF7QKmfptFYk6Z',
-                'unit_id' => 1,
-            ],
-            [
-                'title' => 'Laporan Kinerja Bidang Kawasan Permukiman 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/6qERonpPGHNPXdk',
+                'title' => 'Laporan Kinerja Sekretariat 2022',
                 'unit_id' => 2,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/9CAqrRWznzrgZbx',
             ],
             [
-                'title' => 'Laporan Kinerja Bidang Bina Marga 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/Gy46eixDZ8E8b4D',
-                'unit_id' => 3,
-            ],
-            [
-                'title' => 'Laporan Kinerja Bidang Bina Konstruksi dan Pengendalian Mutu 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/NW7MwyeRqnwK9kb',
-                'unit_id' => 4,
-            ],
-            [
-                'title' => 'Laporan Kinerja Bidang Sumber Daya Air 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/Ee32qNGFLz93n4F',
-                'unit_id' => 5,
-            ],
-            [
-                'title' => 'Laporan Kinerja Bidang Penataan Ruang 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/C2Z2BA9G5zyXYWs',
-                'unit_id' => 6,
-            ],
-            [
-                'title' => 'Laporan Kinerja Bidang Perumahan dan Tata Bangunan 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/tbbe964ezAkRZ4H',
-                'unit_id' => 7,
-            ],
-            [
-                'title' => 'Laporan Kinerja UPTD Sambit Tahun 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/nDeT8Dx4ztDPge5',
-                'unit_id' => 8,
-            ],
-            [
-                'title' => 'Laporan Kinerja UPTD Pulung Tahun 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/wgk8F7RpPCHXSb7',
-                'unit_id' => 9,
-            ],
-            [
-                'title' => 'Laporan Kinerja UPTD Karangan Tahun 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/bmxboj8o6dSTj3i',
+                'title' => 'Laporan Kinerja Bidang Kawasan Permukiman 2022',
                 'unit_id' => 10,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/dRbNxjbG99J9t8S',
             ],
             [
-                'title' => 'Laporan Kinerja UPTD Babadan Tahun 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/nyFqqoDtFjYeJDn',
+                'title' => 'Laporan Kinerja Bidang Bina Marga 2022',
+                'unit_id' => 7,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/EoTrDHNnpDXBf47',
+            ],
+            [
+                'title' => 'Laporan Kinerja Bidang Bina Konstruksi dan Pengendalian Mutu 2022',
                 'unit_id' => 11,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/EoTrDHNnpDXBf47',
             ],
             [
-                'title' => 'Laporan Kinerja UPTD Sumoroto Tahun 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/ESaYdGpzRaSnCGa',
+                'title' => 'Laporan Kinerja Bidang Sumber Daya Air 2022',
+                'unit_id' => 6,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/WKkAXFBmQP9tYtG',
+            ],
+            [
+                'title' => 'Laporan Kinerja Bidang Penataan Ruang 2022',
+                'unit_id' => 8,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/8mf3jg7ByKEgtwg',
+            ],
+            [
+                'title' => 'Laporan Kinerja Bidang Perumahan dan Tata Bangunan 2022',
+                'unit_id' => 9,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/9LFYrxpewDzaZ4n',
+            ],
+            [
+                'title' => 'Laporan Kinerja UPTD Sambit Tahun 2022',
+                'unit_id' => 4,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/L2JAFmzmoPjiQzE',
+            ],
+            [
+                'title' => 'Laporan Kinerja UPTD Pulung Tahun 2022',
+                'unit_id' => 14,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/AE8DmiXMsJ7mYT6',
+            ],
+            [
+                'title' => 'Laporan Kinerja UPTD Karangan Tahun 2022',
                 'unit_id' => 12,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/AqM2KJbLmSMf7sc',
             ],
             [
-                'title' => 'Laporan Kinerja UPTD IPALD 2023',
-                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/yGgz2DEzRp3mYAd',
+                'title' => 'Laporan Kinerja UPTD Babadan Tahun 2022',
                 'unit_id' => 13,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/ix5HFmJdJJ8GjsW',
+            ],
+            [
+                'title' => 'Laporan Kinerja UPTD Sumoroto Tahun 2022',
+                'unit_id' => 3,
+                'file_embed' => 'https://dinz.ddns.net/nextcloud/index.php/s/4jFLzWG23HTJBLC',
             ],
         ];
 
-        foreach ($data as $item) {
+        foreach ($documents as $doc) {
             Document::create([
-                'title'            => $item['title'],
-                'description'      => "Laporan Kinerja tahun 2023 untuk {$this->getUnitName($item['unit_id'])}, berisi capaian kinerja dan hasil pelaksanaan program sesuai dengan tugas dan fungsi unit terkait.",
+                'title' => $doc['title'],
+                'description' => $description,
                 'document_type_id' => 8,
-                'unit_id'          => $item['unit_id'],
-                'year'             => 2023,
-                'slug'             => Str::slug($item['title']),
-                'meta_title'       => $item['title'],
-                'meta_description' => "Laporan Kinerja 2023 {$this->getUnitName($item['unit_id'])}",
-                'file_source'      => 'embed',
-                'file_embed'       => $item['file_embed'],
-                'uploaded_by'      => 7,
-                'upload_date'      => now(),
-                'updated_at'       => now(),
+                'unit_id' => $doc['unit_id'],
+                'year' => 2022,
+                'slug' => Str::slug($doc['title']),
+                'meta_title' => $doc['title'],
+                'meta_description' => $doc['title'] . ' Tahun 2022.',
+                'file_source' => 'embed',
+                'file_embed' => $doc['file_embed'],
+                'uploaded_by' => 7,
             ]);
         }
-    }
-
-    private function getUnitName($unitId)
-    {
-        $units = [
-            1 => 'Sekretariat',
-            2 => 'Bidang Kawasan Permukiman',
-            3 => 'Bidang Bina Marga',
-            4 => 'Bidang Bina Konstruksi dan Pengendalian Mutu',
-            5 => 'Bidang Sumber Daya Air',
-            6 => 'Bidang Penataan Ruang',
-            7 => 'Bidang Perumahan dan Tata Bangunan',
-            8 => 'UPTD Sambit',
-            9 => 'UPTD Pulung',
-            10 => 'UPTD Karangan',
-            11 => 'UPTD Babadan',
-            12 => 'UPTD Sumoroto',
-            13 => 'UPTD IPALD',
-        ];
-
-        return $units[$unitId] ?? 'Unit Terkait';
     }
 }

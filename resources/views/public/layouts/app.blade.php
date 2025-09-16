@@ -36,13 +36,13 @@
     }
   </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
   @include('public.partials.header')
 
-  <div class="container-fluid py-2 px-5">
+  <main class="flex-grow-1 container-fluid py-2 px-5">
     @yield('content')
-  </div>
+  </main>
 
   @include('public.partials.footer')
 

@@ -93,7 +93,11 @@
                         {{ \Illuminate\Support\Str::words($type->description ?? '—', 8, '...') }}
                       </td>
                       <td>{{ $type->category->name ?? '—' }}</td>
-                      <td>{{ $type->documents_count ?? 0 }}</td>
+                      <td>
+                        <a href="{{ route('public.documents.types', $type->slug) }}" class="text-primary">
+                          {{ $type->documents_count ?? 0 }}
+                        </a>
+                      </td>
                       <td>
                       <!-- Tombol Edit -->
                       <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ $type->id }}">

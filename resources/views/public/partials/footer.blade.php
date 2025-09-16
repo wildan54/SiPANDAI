@@ -1,4 +1,4 @@
-<footer class="text-white pt-5 pb-4 mt-5 px-5 rounded-top-3 p-3" style="background-color:#0a1a74;">
+<footer class="text-white pt-5 pb-4 mt-5 px-5 rounded-top-3 p-3" style="background-color:#030F6B;">
     
     <div class="row gy-4 gx-5">
       <!-- Logo & Deskripsi -->
