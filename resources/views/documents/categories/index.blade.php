@@ -94,13 +94,22 @@
                                   data-target="#editCategoryModal{{ $category->id }}">
                             Edit
                           </button>
-                          <form action="{{ route('documents.categories.destroy', $category->id) }}" method="POST" class="d-inline">
-                              @csrf
-                              @method('DELETE')
-                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus kategori ini?')">
-                                  Hapus
-                              </button>
-                          </form>
+                          <!-- Tombol hapus kategori -->
+                          <button type="button"
+                              class="btn btn-sm btn-danger"
+                              data-toggle="modal"
+                              data-target="#deleteCategoryModal{{ $category->id }}">
+                                Hapus
+                          </button>
+
+                          <x-confirm-delete-modal 
+                              :id="'deleteCategoryModal'.$category->id"
+                              :action="route('documents.categories.destroy', $category->id)"
+                              :name="$category->name"
+                              title="Hapus Kategori"
+                              text="Apakah kamu yakin ingin menghapus kategori <strong>{{$category->name}}</strong>? Menghapus kategori tidak akan menghapus dokumen di dalamnya."
+                              :hasMoveOption="false"
+                          />
                       </td>
                   </tr>
                   @endforeach
@@ -117,5 +126,5 @@
   </div>
 </section>
 
-@include('documents.category.modal_edit')
+@include('documents.categories.modal_edit')
 @endsection

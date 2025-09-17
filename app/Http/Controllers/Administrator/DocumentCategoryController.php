@@ -15,7 +15,7 @@ class DocumentCategoryController extends Controller
     public function index()
     {
         $categories = DocumentCategory::withCount('documents')->latest()->get();
-        return view('documents.category.categories', compact('categories'));
+        return view('documents.categories.index', compact('categories'));
     }
 
     /**
@@ -36,7 +36,7 @@ class DocumentCategoryController extends Controller
         ]);
 
         return redirect()
-            ->route('documents.category.categories')
+            ->route('documents.categories.index')
             ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
@@ -58,7 +58,7 @@ class DocumentCategoryController extends Controller
         ]);
 
         return redirect()
-            ->route('documents.category.categories')
+            ->route('documents.categories.index')
             ->with('success', 'Kategori berhasil diperbarui.');
     }
 
@@ -70,7 +70,7 @@ class DocumentCategoryController extends Controller
         $category->delete();
 
         return redirect()
-            ->route('documents.category.categories')
+            ->route('documents.categories.index')
             ->with('success', 'Kategori berhasil dihapus.');
     }
 }

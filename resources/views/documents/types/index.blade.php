@@ -135,5 +135,5 @@
   </div>
 </section>
 
-@include('documents.type.modal_edit')
+@include('documents.types.modal_edit')
 @endsection

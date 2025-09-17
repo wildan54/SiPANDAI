@@ -22,7 +22,7 @@ class DocumentTypeController extends Controller
                         ->latest()
                         ->get();
 
-        return view('documents.type.types', compact('types', 'categories'));
+        return view('documents.types.index', compact('types', 'categories'));
     }
 
     public function store(Request $request)
@@ -65,7 +65,8 @@ class DocumentTypeController extends Controller
 
     public function destroy(Request $request, DocumentType $documentType)
     {
-        $action = $request->input('action');
+        
+        $action = $request->input('delete_action');
         $targetTypeId = $request->input('target_id');
 
         if ($action === 'delete') {

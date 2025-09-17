@@ -27,16 +27,16 @@
         <div class="modal-body">
         @if($hasMoveOption)
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="action" id="{{ $id }}Delete" value="delete" checked>
+                <input class="form-check-input" type="radio" name="delete_action" id="{{ $id }}Delete" value="delete" checked>
                 <label class="form-check-label" for="{{ $id }}Delete">
-                Hapus semua dokumen terkait
+                  Hapus semua dokumen terkait
                 </label>
             </div>
 
             <div class="form-check mt-2">
-                <input class="form-check-input" type="radio" name="action" id="{{ $id }}Move" value="move">
+                <input class="form-check-input" type="radio" name="delete_action" id="{{ $id }}Move" value="move">
                 <label class="form-check-label" for="{{ $id }}Move">
-                Pindahkan dokumen ke:
+                  Pindahkan dokumen ke:
                 </label>
             </div>
             <select name="target_id" class="form-control mt-2">
@@ -46,11 +46,13 @@
                 @endforeach
             </select>
         @else
+            <!-- Tambahan hidden input agar selalu kirim delete_action -->
+            <input type="hidden" name="delete_action" value="delete">
+
             <p class="text-danger font-italic">{{ $text }}</p><br>
             <p>Anda Yakin Ingin Menghapus <strong>{{ $name }}</strong>?</p>
         @endif
         </div>
-
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

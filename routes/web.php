@@ -32,13 +32,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/check-slug', [DocumentController::class, 'checkSlug'])->name('checkSlug');
 
         // Kategori Dokumen
-        Route::get('/kategori', [DocumentCategoryController::class, 'index'])->name('category.categories');
+        Route::get('/kategori', [DocumentCategoryController::class, 'index'])->name('categories.index');
         Route::post('/kategori', [DocumentCategoryController::class, 'store'])->name('categories.store');
         Route::put('/kategori/{category}', [DocumentCategoryController::class, 'update'])->name('categories.update');
         Route::delete('/kategori/{category}', [DocumentCategoryController::class, 'destroy'])->name('categories.destroy');
 
         // Tipe Dokumen
-        Route::get('/tipe', [DocumentTypeController::class, 'index'])->name('type.types');
+        Route::get('/tipe', [DocumentTypeController::class, 'index'])->name('types.index');
         Route::post('/tipe', [DocumentTypeController::class, 'store'])->name('types.store');
         Route::put('/tipe/{documentType}', [DocumentTypeController::class, 'update'])->name('types.update');
         Route::delete('/tipe/{documentType}', [DocumentTypeController::class, 'destroy'])->name('types.destroy');

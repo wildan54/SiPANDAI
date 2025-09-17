@@ -82,12 +82,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('documents.category.categories') }}" class="nav-link {{ Request::routeIs('documents.category.*') ? 'active' : '' }}">
+              <a href="{{ route('documents.categories.index') }}" class="nav-link {{ Request::routeIs('documents.category.*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> Kategori Dokumen
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('documents.type.types') }}" class="nav-link {{ Request::routeIs('documents.type.*') ? 'active' : '' }}">
+              <a href="{{ route('documents.types.index') }}" class="nav-link {{ Request::routeIs('documents.type.*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> Tipe Dokumen
               </a>
             </li>

@@ -118,10 +118,10 @@
             <a href="{{ route('documents.create') }}" class="btn btn-outline-success mr-2">
               <i class="fas fa-file-upload"></i> Upload Dokumen
             </a>
-            <a href="{{ route('documents.category.categories') }}" class="btn btn-outline-primary mr-2">
+            <a href="{{ route('documents.categories.index') }}" class="btn btn-outline-primary mr-2">
               <i class="fas fa-folder-plus"></i> Tambah Kategori
             </a>
-            <a href="{{ route('documents.type.types') }}" class="btn btn-outline-info">
+            <a href="{{ route('documents.types.index') }}" class="btn btn-outline-info">
               <i class="fas fa-tags"></i> Tambah Tipe
             </a>
           </div>
