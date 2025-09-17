@@ -8,14 +8,20 @@ use App\Models\DocumentCategory;
 use App\Models\DocumentType;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use App\Services\AccessLogService;
 
 class DocumentController extends Controller
 {
+    /**
+     * Tampilkan daftar dokumen (index)
+     */
     public function index(Request $request)
     {
+        // Log guest atau user melihat daftar dokumen
+        AccessLogService::log('view');
+
         $query = Document::query()->with(['type', 'unit']);
 
-        // 🔍 Search
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
@@ -24,29 +30,24 @@ class DocumentController extends Controller
             });
         }
 
-        // Filter kategori
         if ($request->filled('category')) {
             $query->whereHas('type', function ($q) use ($request) {
                 $q->where('document_category_id', $request->category);
             });
         }
 
-        // Filter tipe
         if ($request->filled('type')) {
             $query->where('document_type_id', $request->type);
         }
 
-        // Filter unit
         if ($request->filled('unit')) {
             $query->where('unit_id', $request->unit);
         }
 
-        // Filter tahun
         if ($request->filled('year')) {
             $query->where('year', $request->year);
         }
 
-        // Sorting
         if ($request->filled('sort')) {
             $query->orderBy('upload_date', $request->sort === 'oldest' ? 'asc' : 'desc');
         } else {
@@ -63,11 +64,17 @@ class DocumentController extends Controller
         return view('public.home', compact('documents', 'categories', 'types', 'units', 'years'));
     }
 
+    /**
+     * Detail dokumen
+     */
     public function show($slug)
     {
         $document = Document::with(['unit', 'type.category'])
             ->where('slug', $slug)
             ->firstOrFail();
+
+        // Log guest atau user melihat dokumen
+        AccessLogService::log('view', $document);
 
         $otherDocuments = Document::where('id', '!=', $document->id)
             ->where('document_type_id', $document->document_type_id)
@@ -86,9 +93,15 @@ class DocumentController extends Controller
         ]);
     }
 
+    /**
+     * Download dokumen
+     */
     public function download($slug)
     {
         $document = Document::where('slug', $slug)->firstOrFail();
+
+        // Log guest atau user download
+        AccessLogService::log('download', $document);
 
         if (!$document->file_embed) {
             return back()->with('error', 'Link dokumen tidak tersedia.');
@@ -113,7 +126,9 @@ class DocumentController extends Controller
         return redirect()->away($document->file_embed);
     }
 
-    // 🔹 By Type
+    /**
+     * Dokumen berdasarkan tipe
+     */
     public function types($slug)
     {
         $type = DocumentType::where('slug', $slug)->firstOrFail();
@@ -123,6 +138,9 @@ class DocumentController extends Controller
             ->latest('upload_date')
             ->paginate(10);
 
+        // Log guest melihat daftar dokumen tipe ini
+        AccessLogService::log('view');
+
         return view('public.documents.index', [
             'documents'    => $documents,
             'contextLabel' => 'Tipe',
@@ -130,7 +148,9 @@ class DocumentController extends Controller
         ]);
     }
 
-    // 🔹 By Category
+    /**
+     * Dokumen berdasarkan kategori
+     */
     public function categories($slug)
     {
         $category = DocumentCategory::where('slug', $slug)->firstOrFail();
@@ -142,6 +162,9 @@ class DocumentController extends Controller
             ->latest('upload_date')
             ->paginate(10);
 
+        // Log guest melihat daftar dokumen kategori ini
+        AccessLogService::log('view');
+
         return view('public.documents.index', [
             'documents'    => $documents,
             'contextLabel' => 'Kategori',
@@ -149,7 +172,9 @@ class DocumentController extends Controller
         ]);
     }
 
-    // 🔹 By Unit
+    /**
+     * Dokumen berdasarkan unit
+     */
     public function units($slug)
     {
         $unit = Unit::where('slug', $slug)->firstOrFail();
@@ -158,6 +183,9 @@ class DocumentController extends Controller
             ->where('unit_id', $unit->id)
             ->latest('upload_date')
             ->paginate(10);
+
+        // Log guest melihat daftar dokumen unit ini
+        AccessLogService::log('view');
 
         return view('public.documents.index', [
             'documents'    => $documents,
