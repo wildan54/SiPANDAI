@@ -20,6 +20,16 @@
 
 <section class="content">
   <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 bg-primary">
+          <div class="card-body text-center">
+            <h6 class="text-lg mb-2">Total Kunjungan</h6>
+            <h3 class="text-xl font-weight-bold">{{ $totalAccessUser1 ?? 0 }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Statistik: 4 card penuh lebar -->
     <div class="row">
@@ -65,11 +75,10 @@
             <strong>Dokumen per Kategori</strong>
           </div>
           <div class="card-body">
-            <canvas id="chartKategori" height="180"></canvas>
+            <canvas id="chartKategori" height="100"></canvas>
           </div>
         </div>
       </div>
-
       <div class="col-md-6 mb-4">
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white border-bottom-0">
@@ -107,6 +116,64 @@
       </div>
     </div>
 
+    <!-- Baris 6: Aktivitas Dokumen -->
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <h6 class="text-md font-semibold mb-3"> Top 5 Dokumen Dilihat</h6>
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+              <thead>
+                <tr>
+                  <th>Nama Dokumen</th>
+                  <th class="text-center">Total Unduh</th>
+                </tr>
+              </thead>
+              <tbody>
+                @forelse($topViewedDocsUser1?? [] as $doc)
+                  <tr>
+                    <td>{{ $doc->document_title ?? 'Tanpa Judul' }}</td>
+                    <td class="text-center">{{ $doc->total_view}}</td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="2" class="text-muted text-center">Belum ada data</td>
+                  </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <h6 class="text-md font-semibold mb-3"> Top 5 Dokumen Diunduh</h6>
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+              <thead>
+                <tr>
+                  <th>Nama Dokumen</th>
+                  <th class="text-center">Total Unduh</th>
+                </tr>
+              </thead>
+              <tbody>
+                @forelse($topDownloadedDocsUser1 ?? [] as $doc)
+                  <tr>
+                    <td>{{ $doc->document_title ?? 'Tanpa Judul' }}</td>
+                    <td class="text-center">{{ $doc->total_download }}</td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="2" class="text-muted text-center">Belum ada data</td>
+                  </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
     <!-- Baris 4: Quick Actions -->
     <div class="row">
       <div class="col-md-12 mb-4">
@@ -128,7 +195,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </section>
 @endsection

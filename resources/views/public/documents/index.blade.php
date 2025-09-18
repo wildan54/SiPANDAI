@@ -16,7 +16,7 @@
         <div class="col-sm-6 text-sm-end">
         <ol class="breadcrumb float-sm-end mb-0">
             <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}" class="text-dark text-decoration-none fw-bold">
+            <a href="{{ route('public.home') }}" class="text-dark text-decoration-none fw-bold">
                 <i class="bi bi-house-door"></i> Home
             </a>
         </ol>
