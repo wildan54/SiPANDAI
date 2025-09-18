@@ -63,7 +63,7 @@
                 <i class="bi bi-download"></i> Unduh
               </a>
               <a href="{{ route('public.documents.show', $doc->slug) }}" class="btn btn-sm btn-view">
-                <i class="bi bi-eye"></i> Lihat
+                <i class="bi bi-eye"></i> Lihat Detail
               </a>
             </div>
           </div>
@@ -76,13 +76,10 @@
   </div>
 
 
-  <!-- Pagination -->
-  <div class="d-flex justify-content-between align-items-center mt-4 flex-column flex-md-row gap-2">
-    <small class="text-muted">
-      Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
-    </small>
-    {{ $documents->links() }}
-  </div>
+<div class="d-flex justify-content-center justify-content-md-end mt-4">
+  {{ $documents->links('vendor.pagination.bootstrap-5') }}
+</div>
+
 
   <!-- Custom CSS -->
 <style>
@@ -150,7 +147,8 @@
 }
 
 .btn-view:hover {
-  background-color: #04127a;
+  background-color: #02072d;
+  color: #fff;
 }
 </style>
 

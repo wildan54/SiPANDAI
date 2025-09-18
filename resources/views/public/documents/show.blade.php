@@ -31,7 +31,7 @@
 
 <div class="row">
     <!-- Kolom Detail Dokumen -->
-    <div class="col-lg-8">
+    <div class="col-lg-8 mb-3">
         <div class="card card-custom p-4">
             <div class="d-flex mb-3 align-items-start">
                 <i class="bi bi-file-earmark-text fs-2 me-3" style="color: #030F6B;"></i>
@@ -82,7 +82,7 @@
                                 <i class="bi bi-download"></i> Unduh
                             </a>
                             <a href="{{ $document->file_embed }}" target="_blank" class="btn btn-secondary">
-                                <i class="bi bi-eye"></i> Preview
+                                <i class="bi bi-eye"></i> Lihat
                             </a>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
         {{-- Dokumen serupa --}}
         @include('components.quick-access-documents-card', [
             'documents' => $otherDocuments,
-            'title_1' => 'Dokumen Serupa',
+            'title_1' => 'Dokumen '.$document->type->name." serupa",
             'dropdown' => true,
             'id' => 'collapseSimilarDocs'
         ])
