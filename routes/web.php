@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Administrator\AccessLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Administrator\ProfileController;
 use App\Http\Controllers\DashboardController;
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+        Route::get('/statistik', [AccessLogController::class, 'index'])->name('access_logs');
     });
 
     // Profile
@@ -99,6 +101,10 @@ Route::prefix('dokumen')->name('public.documents.')->group(function () {
     // Detail dokumen
     Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('show');
 });
+
+   Route::get('/monitoring', function () {
+        return view('monitoring');
+    });
 
 
 // Auth routes (login, register, password, etc.)

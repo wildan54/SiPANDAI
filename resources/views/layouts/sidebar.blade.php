@@ -126,6 +126,14 @@
           </ul>
         </li>
         @endif
+
+        <!-- Statistik -->
+        <li class="nav-item">
+          <a href="{{ route('users.access_logs') }}" class="nav-link {{ Request::routeIs('access_logs') ? 'active' : '' }}">
+            <i class="fas fa-chart-bar"></i>
+            <p>Statistik Portal</p>
+          </a>
+        </li>
       </ul>
     </nav>
 
