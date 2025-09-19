@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 
 class AccessLogController extends Controller
 {
+    private function checkAdminAccess()
+    {
+        if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->role !== 'administrator') {
+            abort(403, 'Akses ditolak.');
+        }
+    }
+
     public function index(Request $request)
     {
         $query = AccessLog::with(['user', 'document'])

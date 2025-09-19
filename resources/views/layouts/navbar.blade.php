@@ -21,7 +21,7 @@
         <!-- Info -->
         <div class="d-none d-md-block text-left" style="line-height: 1.2;">
           <span class="font-weight-bold">{{ Auth::user()->name }}</span><br>
-          <small class="text-muted">Administrator</small>
+          <small class="text-muted">{{ Auth::user()->role}}</small>
         </div>
         <i class="fas fa-caret-down ml-2"></i>
       </a>
@@ -36,7 +36,7 @@
 
         <!-- Nama -->
         <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-        <small class="text-muted">Administrator</small>
+        <small class="text-muted">{{ Auth::user()->role}}</small>
 
         <div class="dropdown-divider"></div>
 
