@@ -4,7 +4,7 @@
 
 @section('content')
 
-  @include('public.partials.filter')
+@include('public.partials.filter')
 
   <!-- Judul Halaman -->
   <div class="content-header">
@@ -56,8 +56,7 @@
           </div>
 
           <!-- Footer -->
-          <div class="mt-auto d-flex justify-content-between align-items-center">
-            <small class="text-muted">Diunggah: {{ $doc->upload_date->format('d/m/Y') }}</small>
+          <div class="mt-auto d-flex justify-content-end align-items-center">
             <div class="d-flex gap-2">
               <a href="{{ route('public.documents.download', $doc->slug) }}" class="btn btn-sm btn-download">
                 <i class="bi bi-download"></i> Unduh

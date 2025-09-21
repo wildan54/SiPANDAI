@@ -30,12 +30,13 @@
 
   <!-- Card -->
   <div class="card shadow-sm border-0 rounded">
-    <!-- Card Header (Filter + Search) -->
     <div class="card-header bg-primary text-white">
-      <form method="GET" action="{{ route('documents.index') }}" class="row g-2 align-items-center">
+      <form method="GET" action="{{ route('documents.index') }}" 
+            class="d-flex flex-wrap align-items-center gap-2">
+
         <!-- Filter Tipe -->
-        <div class="col-12 col-md-auto">
-          <select name="document_type_id" class="form-control form-control-sm w-100">
+        <div style="min-width: 180px;">
+          <select name="document_type_id" class="form-control form-control-sm">
             <option value="">Tipe</option>
             @foreach($documentTypes as $type)
               <option value="{{ $type->id }}" {{ request('document_type_id') == $type->id ? 'selected' : '' }}>
@@ -46,8 +47,8 @@
         </div>
 
         <!-- Filter Unit -->
-        <div class="col-12 col-md-auto">
-          <select name="unit_id" class="form-control form-control-sm w-100">
+        <div style="min-width: 180px;">
+          <select name="unit_id" class="form-control form-control-sm">
             <option value="">Unit</option>
             @foreach($units as $unit)
               <option value="{{ $unit->id }}" {{ request('unit_id') == $unit->id ? 'selected' : '' }}>
@@ -58,8 +59,8 @@
         </div>
 
         <!-- Filter Tahun -->
-        <div class="col-12 col-md-auto">
-          <select name="year" class="form-control form-control-sm w-100">
+        <div style="min-width: 150px;">
+          <select name="year" class="form-control form-control-sm">
             <option value="">Tahun Dokumen</option>
             @foreach($years as $year)
               <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
@@ -68,9 +69,10 @@
             @endforeach
           </select>
         </div>
+
         <!-- Search -->
-        <div class="col-12 col-md-4 ms-md-auto">
-          <div class="input-group input-group-sm w-100">
+        <div class="flex-grow-1">
+          <div class="input-group input-group-sm">
             <input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Cari Dokumen...">
             <button class="btn btn-light btn-sm" type="submit">
               <i class="fas fa-search"></i>
@@ -112,20 +114,36 @@
                 <td>
                   <span class="badge">{{ $doc->uploader->name ?? '-' }}</span>
                 </td>
+                
+
                 <td class="text-center">
-                  <a href="javascript:void(0)" 
-                    class="btn btn-sm btn-outline-primary mr-1 showDocument" 
-                    data-id="{{ $doc->id }}">
-                    <i class="fas fa-eye"></i>
-                  </a>
-                  <form action="{{ route('documents.destroy', $doc->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin hapus dokumen ini?')" title="Hapus">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </form>
+                    {{-- Tombol View --}}
+                    <a href="javascript:void(0)" 
+                      class="btn btn-sm btn-outline-primary mr-1 showDocument" 
+                      data-id="{{ $doc->id }}" 
+                      title="Lihat Dokumen">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    {{-- Tombol Edit --}}
+                    <a href="{{ route('documents.edit', $doc->id) }}" 
+                      class="btn btn-sm btn-outline-warning mr-1" 
+                      title="Edit Dokumen">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    {{-- Tombol Delete --}}
+                    <form action="{{ route('documents.destroy', $doc->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-outline-danger" 
+                                onclick="return confirm('Yakin hapus dokumen ini?')" 
+                                title="Hapus Dokumen">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
                 </td>
+
               </tr>
             @empty
               <tr>
@@ -138,7 +156,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="card-footer d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+    <div class="card-footer d-flex flex-column flex-md-row justify-content-end align-items-center gap-2">
       <div>
         Menampilkan {{ $documents->firstItem() }} - {{ $documents->lastItem() }} dari {{ $documents->total() }} dokumen
       </div>

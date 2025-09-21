@@ -7,9 +7,9 @@
      Semua
   </a>
   @foreach($categories as $category)
-    <a href="{{ route('public.home', array_merge(request()->except('page'), ['category' => $category->id])) }}" 
-       class="btn btn-sm {{ request('category') == $category->id ? 'text-dark' : 'btn-outline-secondary' }}"
-       style="{{ request('category') == $category->id ? 'background-color:#FEBC2F; border-color:#FEBC2F;' : '' }}">
+    <a href="{{ route('public.home', array_merge(request()->except('page'), ['category' => $category->slug])) }}" 
+       class="btn btn-sm {{ request('category') == $category->slug ? 'text-dark' : 'btn-outline-secondary' }}"
+       style="{{ request('category') == $category->slug ? 'background-color:#FEBC2F; border-color:#FEBC2F;' : '' }}">
        {{ $category->name }}
     </a>
   @endforeach
@@ -25,7 +25,7 @@
       <select name="type" class="form-select">
         <option value="">Semua Tipe</option>
         @forelse($types as $type)
-          <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+          <option value="{{ $type->slug }}" {{ request('type') == $type->slug ? 'selected' : '' }}>
             {{ $type->name }}
           </option>
         @empty
@@ -40,7 +40,7 @@
       <select name="unit" class="form-select">
         <option value="">Semua Bidang</option>
         @foreach($units as $unit)
-          <option value="{{ $unit->id }}" {{ request('unit') == $unit->id ? 'selected' : '' }}>
+          <option value="{{ $unit->slug }}" {{ request('unit') == $unit->slug ? 'selected' : '' }}>
             {{ $unit->name }}
           </option>
         @endforeach
@@ -83,8 +83,18 @@
 </form>
 
 <!-- Indikator Filter Aktif -->
-@if(request()->hasAny(['type', 'unit', 'year', 'sort', 'category']) && collect(request()->only(['type','unit','year','sort','category']))->filter()->isNotEmpty())
+@php
+    $filters = collect(request()->only(['type','unit','year','sort','category']))->filter();
+@endphp
+
+@if($filters->isNotEmpty())
   <div class="alert alert-warning mt-3 p-2">
-    <small><i class="bi bi-funnel"></i> Filter sedang aktif, Klik Tombol Reset Untuk menampilkan semua Dokumen</small>
+    <small>
+      <i class="bi bi-funnel"></i> Filter sedang aktif: 
+      @foreach($filters as $key => $value)
+        <strong>{{ ucfirst($key) }}:</strong> {{ $value }}@if(!$loop->last), @endif
+      @endforeach
+      . Klik tombol Reset untuk menampilkan semua dokumen.
+    </small>
   </div>
 @endif

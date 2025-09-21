@@ -10,7 +10,7 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h4 class="fw-bold mb-3">
-              DOKUMEN <span class="text-warning">PUBLIK</span>
+                DOKUMEN <span class="text-warning">{{ strtoupper($contextName) }}</span>
           </h4>
         </div><!-- /.col -->
         <div class="col-sm-6 text-sm-end">

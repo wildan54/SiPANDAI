@@ -32,7 +32,7 @@
             <div class="card-body">
               <div class="form-group">
                 <label for="name">Nama<span class="text-danger">*</span></label>
-                <input type="text" name="name" id="name" class="form-control" placeholder="Nama bidang" required>
+                <input type="text" name="name" id="name" class="form-control" placeholder="Nama bidang">
               </div>
               <div class="form-group">
                 <label for="slug">Slug <span class="text-danger">*</span></label>

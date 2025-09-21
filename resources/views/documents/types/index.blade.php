@@ -37,7 +37,7 @@
                 <input type="text" name="name" id="name" class="form-control" placeholder="Nama tipe dokumen" required>
               </div>
               <div class="form-group">
-                <label for="slug">Slug <span class="text-danger">*</span></label>
+                <label for="slug">Slug</label>
                 <input type="text" name="slug" id="slug" class="form-control" placeholder="slug-tipe">
                 <small class="form-text text-muted">
                   “Slug” adalah versi nama yang ramah URL. Biasanya semuanya huruf kecil dan hanya mengandung huruf, angka, serta tanda hubung.

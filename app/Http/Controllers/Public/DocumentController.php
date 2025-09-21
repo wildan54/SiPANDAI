@@ -15,77 +15,83 @@ class DocumentController extends Controller
     /**
      * Tampilkan daftar dokumen (index)
      */
-    public function index(Request $request)
-    {
-        // Log guest atau user melihat daftar dokumen
-        AccessLogService::log('view');
+ public function index(Request $request)
+{
+    // Log guest atau user melihat daftar dokumen
+    AccessLogService::log('view');
 
-        $query = Document::query()->with(['type', 'unit']);
+    $query = Document::query()->with(['type', 'unit']);
 
-        // 🔍 Pencarian keyword
-        if ($request->filled('q')) {
-            $q = $request->q;
-            $query->where(function ($sub) use ($q) {
-                $sub->where('title', 'like', "%{$q}%")
-                    ->orWhere('description', 'like', "%{$q}%");
+    // 🔍 Pencarian keyword
+    if ($request->filled('q')) {
+        $q = $request->q;
+        $query->where(function ($sub) use ($q) {
+            $sub->where('title', 'like', "%{$q}%")
+                ->orWhere('description', 'like', "%{$q}%");
+        });
+    }
+
+    // Ambil semua data dropdown
+    $categories = DocumentCategory::orderBy('name', 'asc')->get();
+    $types      = DocumentType::orderBy('name', 'asc')->get();
+    $units      = Unit::orderBy('name', 'asc')->get();
+    $years      = Document::select('year')->distinct()->orderBy('year', 'asc')->pluck('year');
+
+    $activeFilters = [];
+
+    // Filter kategori berdasarkan slug
+    if ($request->filled('category')) {
+        $category = DocumentCategory::where('slug', $request->category)->first();
+        if ($category) {
+            $query->whereHas('type', function ($q) use ($category) {
+                $q->where('document_category_id', $category->id);
             });
-        }
-
-        // Filter kategori
-        if ($request->filled('category')) {
-            $validTypes = DocumentType::where('document_category_id', $request->category)
-                ->pluck('id')
-                ->toArray();
-
-            // Reset type jika tidak sesuai dengan kategori terpilih
-            if ($request->filled('type') && !in_array($request->type, $validTypes)) {
-                $request->merge(['type' => null]);
-            }
-
-            $query->whereHas('type', function ($q) use ($request) {
-                $q->where('document_category_id', $request->category);
-            });
-
-            // Dropdown type hanya milik kategori ini
-            $types = DocumentType::where('document_category_id', $request->category)
+            $types = DocumentType::where('document_category_id', $category->id)
                 ->orderBy('name', 'asc')
                 ->get();
-        } else {
-            $types = DocumentType::orderBy('name', 'asc')->get();
+            $activeFilters['Kategori'] = $category->name;
         }
-
-        // Filter tipe
-        if ($request->filled('type')) {
-            $query->where('document_type_id', $request->type);
-        }
-
-        // Filter unit
-        if ($request->filled('unit')) {
-            $query->where('unit_id', $request->unit);
-        }
-
-        // Filter tahun
-        if ($request->filled('year')) {
-            $query->where('year', $request->year);
-        }
-
-        // Urutan sort
-        if ($request->filled('sort')) {
-            $query->orderBy('year', $request->sort === 'oldest' ? 'asc' : 'desc');
-        } else {
-            $query->latest('year');
-        }
-
-        // Pagination hasil
-        $documents = $query->paginate(12)->withQueryString();
-
-        // Data untuk dropdown
-        $categories = DocumentCategory::orderBy('name', 'asc')->get();
-        $units      = Unit::orderBy('name', 'asc')->get();
-        $years      = Document::select('year')->distinct()->orderBy('year', 'asc')->pluck('year');
-
-        return view('public.home', compact('documents', 'categories', 'types', 'units', 'years'));
     }
+
+    // Filter tipe berdasarkan slug
+    if ($request->filled('type')) {
+        $type = DocumentType::where('slug', $request->type)->first();
+        if ($type) {
+            $query->where('document_type_id', $type->id);
+            $activeFilters['Tipe'] = $type->name;
+        }
+    }
+
+    // Filter unit berdasarkan slug
+    if ($request->filled('unit')) {
+        $unit = Unit::where('slug', $request->unit)->first();
+        if ($unit) {
+            $query->where('unit_id', $unit->id);
+            $activeFilters['Unit'] = $unit->name;
+        }
+    }
+
+    // Filter tahun
+    if ($request->filled('year')) {
+        $query->where('year', $request->year);
+        $activeFilters['Tahun'] = $request->year;
+    }
+
+    // Urutan sort
+    if ($request->filled('sort')) {
+        $query->orderBy('year', $request->sort === 'oldest' ? 'asc' : 'desc');
+    } else {
+        $query->latest('year');
+    }
+
+    // Pagination hasil
+    $documents = $query->paginate(12)->withQueryString();
+
+    return view('public.home', compact(
+        'documents', 'categories', 'types', 'units', 'years', 'activeFilters'
+    ));
+}
+
 
 
     /**
