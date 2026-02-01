@@ -57,7 +57,7 @@
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
                            class="w-full px-5 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }}"
-                           placeholder="you@example.com">
+                           placeholder="masukkan email Anda">
                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-600" />
                 </div>
 
@@ -66,7 +66,7 @@
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <input id="password" type="password" name="password" required
                            class="w-full px-5 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}"
-                           placeholder="••••••••">
+                           placeholder="masukkan passsword Anda">
                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-600" />
                 </div>
 

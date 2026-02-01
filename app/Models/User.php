@@ -12,8 +12,6 @@ class User extends Authenticatable
 
     /**
      * Kolom yang bisa diisi mass-assignment.
-     *
-     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -22,12 +20,11 @@ class User extends Authenticatable
         'password',
         'last_active',
         'role',
+        'unit_id', // ✅ ganti dari 'unit'
     ];
 
     /**
      * Kolom yang disembunyikan ketika serialisasi.
-     *
-     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -36,35 +33,36 @@ class User extends Authenticatable
 
     /**
      * Casting atribut.
-     *
-     * @return array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'password'    => 'hashed',
+        'last_active' => 'datetime',
+    ];
+
+    /**
+     * =====================
+     * RELATIONS
+     * =====================
+     */
+
+    /**
+     * User belongs to Unit
+     */
+    public function unit()
     {
-        return [
-            'password'    => 'hashed',
-            'last_active' => 'datetime',
-        ];
+        return $this->belongsTo(Unit::class);
     }
 
     /**
-     * Cek apakah user sedang online.
-     */
-    public function isOnline(): bool
-    {
-        return $this->last_active && $this->last_active->greaterThan(now()->subMinutes(5));
-    }
-
-    /**
-     * Relasi ke access logs.
+     * Relasi ke access logs
      */
     public function accessLogs()
     {
-        return $this->hasMany(AccessLog::class, 'uploaded_by');
+        return $this->hasMany(AccessLog::class, 'user_id');
     }
 
     /**
-     * Relasi ke dokumen.
+     * Relasi ke dokumen yang diupload
      */
     public function documents()
     {
@@ -72,14 +70,46 @@ class User extends Authenticatable
     }
 
     /**
-     * Hapus access log saat user dihapus.
+     * =====================
+     * HELPERS
+     * =====================
+     */
+
+    /**
+     * Cek apakah user sedang online
+     */
+    public function isOnline(): bool
+    {
+        return $this->last_active &&
+               $this->last_active->greaterThan(now()->subMinutes(5));
+    }
+
+    /**
+     * Helper role
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'administrator';
+    }
+
+    public function isEditor(): bool
+    {
+        return $this->role === 'editor';
+    }
+
+    /**
+     * =====================
+     * MODEL EVENTS
+     * =====================
+     */
+
+    /**
+     * Hapus access log saat user dihapus
      */
     protected static function booted()
     {
         static::deleting(function ($user) {
-            foreach ($user->accessLogs as $log) {
-                $log->forceDelete(); // bypass proteksi delete() di AccessLog
-            }
+            $user->accessLogs()->forceDelete();
         });
     }
 }

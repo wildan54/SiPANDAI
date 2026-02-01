@@ -124,6 +124,7 @@
                   @endforeach
               </tbody>
             </table>
+            
 
             <p class="mt-3 text-muted">
               Menghapus tipe dokumen, akan menghapus semua dokumen yang terkait dengan tipe tersebut, kecuali jika Anda memilih untuk memindahkannya ke tipe lain.

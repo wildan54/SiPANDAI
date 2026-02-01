@@ -48,6 +48,17 @@ class AccessLogController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('users.access_logs', compact('logs', 'users'));
+        return view('users.access_logs.index', compact('logs', 'users'));
     }
+
+
+        public function show($id)
+    {
+        $this->checkAdminAccess();
+
+        $log = AccessLog::with(['user', 'document'])->findOrFail($id);
+
+        return view('users.access_logs.detail', compact('log'));
+    }
+
 }

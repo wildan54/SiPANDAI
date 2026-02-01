@@ -1,9 +1,8 @@
-=@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Statistik Penggunaan Portal')
 
 @section('content')
-<div class="container">
     <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -19,7 +18,6 @@
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
 
     {{-- Filter --}}
     <form method="GET" class="mb-3">
@@ -81,7 +79,8 @@
                             <th>User</th>
                             <th>Aksi</th>
                             <th>Dokumen</th>
-                            <th>IP</th>
+                            <th>Ip_Address</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,6 +99,10 @@
                             </td>
                             <td>{{ $log->document_title ?? '-' }}</td>
                             <td>{{ $log->ip_address }}</td>
+                            <td>
+                                <a href="{{ route('users.access_logs.detail', $log->id) }}" class="btn btn-sm btn-primary">
+                                    Lihat Detail
+                                </a>
                         </tr>
                         @empty
                         <tr>
@@ -115,5 +118,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection

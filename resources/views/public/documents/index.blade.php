@@ -1,6 +1,8 @@
+{{-- Tampilan Dokumen Setiap Kategori, Tipe, Unit --}}
+
 @extends('public.layouts.app')
 
-@section('title', $contextLabel . ' Dokumen - ' . $contextName)
+@section('title', 'Dokumen '.$contextLabel ." ". $contextName)
 
 @section('content')
 
@@ -19,6 +21,10 @@
             <a href="{{ route('public.home') }}" class="text-dark text-decoration-none fw-bold">
                 <i class="bi bi-house-door"></i> Home
             </a>
+            </li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">
+                {{ 'Dokumen '.$contextName }}
+            </li>
         </ol>
         </div>
       </div><!-- /.row -->
@@ -57,9 +63,17 @@
           <div class="mt-auto d-flex justify-content-between align-items-center">
             <small class="text-muted">Diunggah: {{ $doc->upload_date->format('d/m/Y') }}</small>
             <div class="d-flex gap-2">
-              <a href="{{ route('public.documents.download', $doc->slug) }}" class="btn btn-sm btn-download">
-                <i class="bi bi-download"></i> Unduh
-              </a>
+              @if($doc->file_path)
+                  <a href="{{ route('public.documents.download.file', $doc->slug) }}"
+                      class="btn btn-download">
+                      <i class="bi bi-download"></i>Unduh
+                  </a>
+              @elseif($doc->file_embed)
+                  <a href="{{ route('public.documents.download.embed', $doc->slug) }}"
+                      class="btn btn-download">
+                      <i class="bi bi-download"></i>Unduh
+                  </a>
+              @endif
               <a href="{{ route('public.documents.show', $doc->slug) }}" class="btn btn-sm btn-view">
                 <i class="bi bi-eye"></i> Lihat
               </a>
@@ -82,7 +96,13 @@
     {{ $documents->links() }}
   </div>
 
-  <!-- Custom CSS -->
+  <div class="text-center mt-4">
+      <a href="{{ route('public.home') }}" class="btn btn-back">
+          <i class="bi bi-arrow-left"></i> Kembali ke Home
+      </a>
+  </div>
+
+<!-- Custom CSS -->
 <style>
 /* Batasi tinggi card & isi flex agar tombol selalu di bawah */
 .card-custom {
@@ -150,6 +170,21 @@
 .btn-view:hover {
   background-color: #04127a;
 }
+
+.btn-back {
+  background-color: #6c757d;
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+  color: #fff;
+}
+
 </style>
 
 @endsection

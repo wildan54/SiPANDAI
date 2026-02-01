@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -14,13 +16,13 @@ class UserController extends Controller
      */
     private function checkAdminAccess()
     {
-        if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->role !== 'administrator') {
+        if (!Auth::check() || Auth::user()->role !== 'administrator') {
             abort(403, 'Akses ditolak.');
         }
     }
 
     /**
-     * Tampilkan daftar user.
+     * Tampilkan daftar user
      */
     public function index(Request $request)
     {
@@ -28,30 +30,37 @@ class UserController extends Controller
 
         $search = $request->input('search');
 
-        $users = User::query()
-            ->withCount('documents') // hitung jumlah dokumen
+        $units = Unit::orderBy('name')->get();
+
+        $users = User::with('unit')
+            ->withCount('documents')
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
             })
             ->latest()
             ->paginate(10);
 
-        return view('users.index', compact('users', 'search'));
+        return view('users.index', compact('users', 'search','units'));
     }
 
     /**
-     * Form tambah user.
+     * Form tambah user
      */
     public function create()
     {
         $this->checkAdminAccess();
-        return view('users.create');
+
+        $units = Unit::orderBy('name')->get();
+
+        return view('users.create', compact('units'));
     }
 
     /**
-     * Simpan user baru.
+     * Simpan user baru
      */
     public function store(Request $request)
     {
@@ -62,6 +71,7 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:users,username',
             'email'    => 'required|email|unique:users,email',
             'role'     => 'required|in:administrator,editor',
+            'unit_id'  => 'required_if:role,editor|nullable|exists:units,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -70,23 +80,28 @@ class UserController extends Controller
             'username' => $request->username,
             'email'    => $request->email,
             'role'     => $request->role,
+            'unit_id'  => $request->role === 'editor' ? $request->unit_id : null,
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
+        return redirect()->route('users.index')
+            ->with('success', 'User berhasil ditambahkan.');
     }
 
     /**
-     * Form edit user.
+     * Form edit user
      */
     public function edit(User $user)
     {
         $this->checkAdminAccess();
-        return view('users.edit', compact('user'));
+
+        $units = Unit::orderBy('name')->get();
+
+        return view('users.edit', compact('user', 'units'));
     }
 
     /**
-     * Update user.
+     * Update user
      */
     public function update(Request $request, User $user)
     {
@@ -97,10 +112,17 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email'    => 'required|email|unique:users,email,' . $user->id,
             'role'     => 'required|in:administrator,editor',
+            'unit_id'  => 'required_if:role,editor|nullable|exists:units,id',
             'password' => 'nullable|string|min:6|confirmed',
         ]);
 
-        $data = $request->only(['name', 'username', 'email', 'role']);
+        $data = [
+            'name'     => $request->name,
+            'username' => $request->username,
+            'email'    => $request->email,
+            'role'     => $request->role,
+            'unit_id'  => $request->role === 'editor' ? $request->unit_id : null,
+        ];
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
@@ -108,42 +130,42 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('users.index')
+            ->with('success', 'User berhasil diperbarui.');
     }
 
     /**
-     * Hapus user dengan opsi hapus/pindahkan dokumen.
+     * Hapus user
      */
     public function destroy(Request $request, User $user)
     {
         $this->checkAdminAccess();
 
-        // 🔒 Cegah admin menghapus dirinya sendiri
-        if ($user->id === optional(auth()->user)->id) {
-            return redirect()->route('users.index')->with('error', 'Anda tidak bisa menghapus diri sendiri.');
+        // Cegah admin hapus diri sendiri
+        if ($user->id === Auth::id()) {
+            return redirect()->route('users.index')
+                ->with('error', 'Anda tidak bisa menghapus diri sendiri.');
         }
-        // Validasi pilihan hapus atau pindahkan
+
         $request->validate([
             'action'    => 'required|in:delete,move',
-            'target_id' => 'required_if:action,move|exists:users,id',
+            'target_id' => 'required_if:action,move|exists:users,id|different:' . $user->id,
         ]);
 
-        $action = $request->input('action'); // 'delete' atau 'move'
-        $targetUserId = $request->input('target_id'); // jika move
-
         if ($user->documents()->count() > 0) {
-            if ($action === 'delete') {
-                // Hapus semua dokumen terkait
+            if ($request->action === 'delete') {
                 $user->documents()->delete();
-            } elseif ($action === 'move') {
-                // Pindahkan dokumen ke user lain
-                $user->documents()->update(['user_id' => $targetUserId]);
+            } else {
+                // Pindahkan kepemilikan dokumen
+                $user->documents()->update([
+                    'uploaded_by' => $request->target_id
+                ]);
             }
         }
 
-        // AccessLog ikut terhapus otomatis lewat hook di model User
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+        return redirect()->route('users.index')
+            ->with('success', 'User berhasil dihapus.');
     }
 }

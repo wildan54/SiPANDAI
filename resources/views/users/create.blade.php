@@ -51,6 +51,17 @@
                                     <option value="editor">Editor</option>
                                 </select>
                             </div>
+                            <div class="form-group d-none" id="unit-wrapper">
+                                <label for="unit_id">Unit / Bidang</label>
+                                <select name="unit_id" class="form-control" id="unit_id">
+                                    <option value="">-- Pilih Unit --</option>
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}">
+                                            {{ $unit->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan password" required>
@@ -70,3 +81,22 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    const roleSelect = document.getElementById('role');
+    const unitWrapper = document.getElementById('unit-wrapper');
+    const unitSelect = document.getElementById('unit_id');
+
+    roleSelect.addEventListener('change', function () {
+        if (this.value === 'editor') {
+            unitWrapper.classList.remove('d-none');
+            unitSelect.setAttribute('required', 'required');
+        } else {
+            unitWrapper.classList.add('d-none');
+            unitSelect.removeAttribute('required');
+            unitSelect.value = '';
+        }
+    });
+</script>
+@endpush

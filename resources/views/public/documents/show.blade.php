@@ -46,6 +46,18 @@
                         <span class="badge bg-light text-dark">{{ $document->year }}</span>
                     </div>
 
+                    @if ($document->file_path)
+                    <div class="embed-responsive embed-responsive-4by3 border rounded-lg">
+                    <iframe
+                        id="docEmbed"
+                        class="embed-responsive-item"
+                        src=""
+                        type="application/pdf"
+                        frameborder="0">
+                    </iframe>
+                    </div>
+                    @endif
+
                     <!-- Kolom Detail Dokumen -->
                     <div class="table-responsive mt-3">
                         <table class="table table-bordered table-sm text-wrap">
@@ -78,12 +90,22 @@
 
                         <!-- Tombol di kanan -->
                         <div class="d-flex gap-2 flex-wrap">
-                            <a href="{{ route('public.documents.download', $document->slug) }}" class="btn btn-download">
-                                <i class="bi bi-download"></i> Unduh
+                        @if($document->file_path)
+                            <a href="{{ route('public.documents.download.file', $document->slug) }}"
+                                class="btn btn-download">
+                                <i class="bi bi-download"></i>Unduh
                             </a>
+                        @elseif($document->file_embed)
+                            <a href="{{ route('public.documents.download.embed', $document->slug) }}"
+                                class="btn btn-download">
+                                <i class="bi bi-download"></i>Unduh
+                            </a>
+                        @endif
+                        @if($document->file_embed)
                             <a href="{{ $document->file_embed }}" target="_blank" class="btn btn-secondary">
                                 <i class="bi bi-eye"></i> Lihat
                             </a>
+                        @endif
                         </div>
                     </div>
                 </div>
@@ -101,7 +123,7 @@
         {{-- Dokumen serupa --}}
         @include('components.quick-access-documents-card', [
             'documents' => $otherDocuments,
-            'title_1' => 'Dokumen '.$document->type->name." serupa",
+            'title_1' => 'Tipe Dokumen '.$document->type->name.' Lainnya',
             'dropdown' => true,
             'id' => 'collapseSimilarDocs'
         ])
@@ -109,7 +131,7 @@
         {{-- Tipe dokumen dalam kategori yg sama --}}
         @include('components.quick-access-types-card', [
             'types' => $sameCategoryTypes,
-            'title' => $document->type->category->name,
+            'title' => 'Kategori '.$document->type->category->name. ' Lainnya',
             'id' => 'collapseCategoryDocs'
         ])
     </div>
@@ -143,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-// <!-- Custom Style untuk card -->
+<!-- Custom Style untuk card -->
 <style>
 .card-custom h3,
 .card-custom p,

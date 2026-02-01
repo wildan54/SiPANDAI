@@ -13,7 +13,7 @@
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-          <li class="breadcrumb-item active">Tembah Dokumen</li>
+          <li class="breadcrumb-item active">Tambah Dokumen</li>
         </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->
@@ -27,9 +27,20 @@
                 <div class="card-header">
                     <h3 class="card-title">Form Tambah Dokumen</h3>
                 </div>
-                <form action="{{ route('documents.store') }}" method="POST">
+                <form action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
+
+
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
                         {{-- Judul --}}
                         <div class="form-group">
@@ -40,7 +51,7 @@
                                 value="{{ old('title') }}" 
                                 placeholder="Masukkan judul dokumen" required>
                             @error('title')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -50,30 +61,83 @@
                             <textarea class="form-control @error('description') is-invalid @enderror" 
                                     id="description" name="description" rows="3" placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
                             @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        {{-- File Embed --}}
+                        {{-- Sumber Dokumen --}}
                         <div class="form-group">
-                            <label for="file_embed">Link/Embed File <span class="text-danger">*</span></label>
-                            <input type="url" 
-                                class="form-control @error('file_embed') is-invalid @enderror" 
-                                id="file_embed" name="file_embed" 
-                                value="{{ old('file_embed') }}" 
-                                placeholder="Masukkan URL/embed link file dari Nextcloud (share publik)" required>
-                            @error('file_embed')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <label class="d-block">Sumber Dokumen <span class="text-danger">*</span></label>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio"
+                                    name="file_source" id="source_upload"
+                                    value="upload"
+                                    {{ old('file_source', 'embed') === 'upload' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="source_upload">
+                                    Upload File
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio"
+                                    name="file_source" id="source_embed"
+                                    value="embed"
+                                    {{ old('file_source', 'embed') === 'embed' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="source_embed">
+                                    Link / Embed (Nextcloud)
+                                </label>
+                            </div>
+
+                            @error('file_source')
+                                <div class="text-danger small mt-1">
+                                    {{ $message }}
+                                </div>
                             @enderror
-                            <small class="form-text text-muted">
-                                Dokumen harus diupload terlebih dahulu ke <strong>Nextcloud</strong>, kemudian di-share secara publik. 
-                                Salin link publik dan tempelkan di kolom ini.
-                            </small>
-							
-							<a href="https://dinz.ddns.net/nextcloud/index.php/login" target="_blank" class="btn btn-sm btn-info mt-2">
-								<i class="fas fa-cloud-upload-alt"></i> Buka Nextcloud
-							</a>
                         </div>
+
+
+                        {{-- Embed Link --}}
+                        <div class="form-group" id="embed_wrapper">
+                            <label for="file_embed">Link / Embed File <span class="text-danger">*</span></label>
+                            <input type="url"
+                                class="form-control @error('file_embed') is-invalid @enderror"
+                                id="file_embed" name="file_embed"
+                                value="{{ old('file_embed') }}"
+                                placeholder="Masukkan URL share publik Nextcloud">
+
+                            @error('file_embed')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+
+                            <small class="form-text text-muted">
+                                Upload dokumen ke <strong>Nextcloud</strong>, lalu share publik dan tempelkan link di sini.
+                            </small>
+
+                            <a href="https://dinz.ddns.net/nextcloud/index.php/login"
+                            target="_blank"
+                            class="btn btn-sm btn-info mt-2">
+                                <i class="fas fa-cloud-upload-alt"></i> Buka Nextcloud
+                            </a>
+                        </div>
+
+                        {{-- Upload File --}}
+                        <div class="form-group {{ old('file_source', 'embed') === 'upload' ? '' : 'd-none' }}" id="upload_wrapper">
+
+                            <label for="file_upload">Upload File Dokumen <span class="text-danger">*</span></label>
+                            <input type="file"
+                                class="form-control @error('file_upload') is-invalid @enderror"
+                                id="file_upload" name="file_upload"
+                                accept=".pdf">
+
+                            @error('file_upload')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+
+                            <small class="form-text text-muted">
+                                Format diperbolehkan: PDF (maks 5MB)
+                            </small>
+                        </div>
+
 
                         {{-- Tipe Dokumen --}}
                         <div class="form-group">
@@ -88,26 +152,44 @@
                                 @endforeach
                             </select>
                             @error('document_type_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
                         {{-- Unit --}}
                         <div class="form-group">
                             <label for="unit_id">Unit <span class="text-danger">*</span></label>
-                            <select id="unit_id" name="unit_id" 
-                                    class="form-control @error('unit_id') is-invalid @enderror" required>
-                                <option value="">-- Pilih Unit --</option>
-                                @foreach($units as $unit)
-                                    <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
-                                        {{ $unit->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('unit_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+
+                            @if(auth()->user()->role === 'editor')
+                                {{-- Editor: unit otomatis & terkunci --}}
+
+                                <input type="hidden" name="unit_id" value="{{ auth()->user()->unit_id }}">
+
+                                <input type="text"
+                                    class="form-control"
+                                    value="{{ optional($units->firstWhere('id', auth()->user()->unit_id))->name }}"
+                                    readonly>
+                            @else
+                                {{-- Administrator: pilih manual --}}
+                                <select id="unit_id"
+                                        name="unit_id"
+                                        class="form-control @error('unit_id') is-invalid @enderror"
+                                        required>
+                                    <option value="">-- Pilih Unit --</option>
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}"
+                                            {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
+                                            {{ $unit->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('unit_id')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            @endif
                         </div>
+
 
                         {{-- Tahun --}}
                         <div class="form-group">
@@ -118,7 +200,7 @@
                                 value="{{ old('year') }}" 
                                 placeholder="contoh: 2025" required>
                             @error('year')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -131,7 +213,7 @@
                                 value="{{ old('slug') }}" 
                                 placeholder="contoh: surat-keputusan-2025">
                             @error('slug')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                             <small class="form-text text-muted">
                                 Slug diisi otomatis berdasarkan judul, 
@@ -153,7 +235,7 @@
                             </small>
                             <small  id="meta_title_count" class="text-muted"></small>
                             @error('meta_title')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -169,13 +251,13 @@
                             </small>
                             <small id="meta_description_count" class="text-muted"></small>
                             @error('meta_description')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
 
-                        {{-- Hidden file_source --}}
-                        <input type="hidden" name="file_source" value="embed">
+                        {{-- Hidden file_source
+                        <input type="hidden" name="file_source" value="embed"> --}}
 
                     </div>
 
@@ -275,6 +357,37 @@ document.addEventListener('DOMContentLoaded', function() {
     if (metaDescInput) {
         updateCount(metaDescInput, 'meta_description_count', 160, 160);
     }
+
+    function toggleFileSource() {
+        const source = document.querySelector('input[name="file_source"]:checked').value;
+
+        const embedInput  = document.getElementById('file_embed');
+        const uploadInput = document.getElementById('file_upload');
+
+        if (source === 'upload') {
+            document.getElementById('upload_wrapper').classList.remove('d-none');
+            document.getElementById('embed_wrapper').classList.add('d-none');
+
+            embedInput.value = '';
+            embedInput.disabled = true;
+            uploadInput.disabled = false;
+        } else {
+            document.getElementById('embed_wrapper').classList.remove('d-none');
+            document.getElementById('upload_wrapper').classList.add('d-none');
+
+            uploadInput.value = '';
+            uploadInput.disabled = true;
+            embedInput.disabled = false;
+        }
+    }
+
+
+    document.querySelectorAll('input[name="file_source"]').forEach(el => {
+        el.addEventListener('change', toggleFileSource);
+    });
+
+    // initial load
+    toggleFileSource();
 });
 </script>
 @endpush

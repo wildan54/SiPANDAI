@@ -31,6 +31,15 @@
               <option value="editor">Editor</option>
             </select>
           </div>
+          <div class="form-group d-none" id="edit-unit-wrapper">
+            <label for="edit_unit_id">Unit / Bidang</label>
+            <select name="unit_id" class="form-control" id="edit_unit_id">
+              <option value="">-- Pilih Unit --</option>
+              @foreach($units as $unit)
+                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+              @endforeach
+            </select>
+          </div>
           <div class="form-group">
             <label for="edit_password">Password <small>(kosongkan jika tidak ingin diganti)</small></label>
             <input type="password" name="password" class="form-control" id="edit_password">
@@ -52,28 +61,54 @@
 
 @push('scripts')
 <script>
-$(document).ready(function() {
-  $('.edit-user-btn').on('click', function() {
-    let userId = $(this).data('id');
-    let name = $(this).data('name');
+$(document).ready(function () {
+
+  function toggleUnitField(role) {
+    if (role === 'editor') {
+      $('#edit-unit-wrapper').removeClass('d-none');
+      $('#edit_unit_id').attr('required', true);
+    } else {
+      $('#edit-unit-wrapper').addClass('d-none');
+      $('#edit_unit_id').removeAttr('required').val('');
+    }
+  }
+
+  $('.edit-user-btn').on('click', function () {
+    let userId   = $(this).data('id');
+    let name     = $(this).data('name');
     let username = $(this).data('username');
-    let email = $(this).data('email');
-    let role = $(this).data('role'); // <-- Tambahkan ini
+    let email    = $(this).data('email');
+    let role     = $(this).data('role');
+    let unitId   = $(this).data('unit'); // ⬅ unit_id dari button
 
     // Set action form
-    $('#editUserForm').attr('action', 'pengguna/' + userId);
+    $('#editUserForm').attr(
+                            'action',
+                            '{{ route("users.update", ":id") }}'.replace(':id', userId)
+                          );
+
 
     // Isi form
     $('#edit_name').val(name);
     $('#edit_username').val(username);
     $('#edit_email').val(email);
-    $('#edit_role').val(role); // <-- Tambahkan ini
+    $('#edit_role').val(role);
+    $('#edit_unit_id').val(unitId ?? '');
     $('#edit_password').val('');
     $('#edit_password_confirmation').val('');
 
-    // Tampilkan modal
+    // Toggle unit
+    toggleUnitField(role);
+
+    // Show modal
     $('#editUserModal').modal('show');
   });
+
+  // Jika role diubah manual
+  $('#edit_role').on('change', function () {
+    toggleUnitField(this.value);
+  });
+
 });
 </script>
 @endpush

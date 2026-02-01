@@ -25,7 +25,7 @@
         <div class="col-md-12">
             <div class="card card-primary">
                 <div class="card-header"><h3 class="card-title">Form Edit Dokumen</h3></div>
-                <form action="{{ route('documents.update', $document->id) }}" method="POST">
+                <form action="{{ route('documents.update', $document->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="card-body">
@@ -49,17 +49,88 @@
                                       placeholder="Masukkan deskripsi">{{ old('description', $document->description) }}</textarea>
                         </div>
 
-                        {{-- File Embed --}}
-                        <div class="form-group">
-                            <label for="file_embed">Link/Embed File <span class="text-danger">*</span></label>
-                            <input type="url" 
-                                   class="form-control @error('file_embed') is-invalid @enderror" 
-                                   id="file_embed" name="file_embed" 
-                                   value="{{ old('file_embed', $document->file_embed) }}" 
-                                   placeholder="Masukkan URL/embed link file dari Nextcloud (share publik)" required>
-                            <small class="form-text text-muted">
-                                Hanya link dari Nextcloud yang diperbolehkan.
-                            </small>
+                        {{-- Sumber Dokumen --}}
+                        <fieldset class="form-group">
+                            <label><span>Sumber Dokumen <span class="text-danger">*</span></span></label><br>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="file_source"
+                                    id="source_upload"
+                                    value="upload"
+                                    {{ old('file_source', $document->file_source) === 'upload' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="source_upload">Upload File</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="file_source"
+                                    id="source_embed"
+                                    value="embed"
+                                    {{ old('file_source', $document->file_source) === 'embed' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="source_embed">Link / Embed</label>
+                            </div>
+
+                            @error('file_source')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                        </fieldset>
+
+
+                        {{-- Upload --}}
+                        <div class="form-group"
+                            id="upload-wrapper"
+                            style="{{ old('file_source', $document->file_source) === 'upload' ? '' : 'display:none;' }}">
+
+                            <label>
+                                File saat ini:
+                                    <a href="{{ asset('storage/'.$document->file_path) }}" target="_blank">
+                                        {{ basename($document->file_path) }}
+                                    </a>
+                            </label>
+
+                            <input type="file"
+                                id="file_upload"
+                                name="file_upload"
+                                class="form-control @error('file_upload') is-invalid @enderror"
+                                accept="application/pdf">
+
+                            {{-- ERROR UPLOAD --}}
+                            @error('file_upload')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                            @if($document->file_path)
+                                <small class="form-text text-muted mt-1">
+                                Format diperbolehkan: PDF (maks 5MB)
+                                </small>
+                            @endif
+                        </div>
+
+
+                        {{-- Embed --}}
+                        <div class="form-group"
+                            id="embed-wrapper"
+                            style="{{ old('file_source', $document->file_source) === 'embed' ? '' : 'display:none;' }}">
+
+                            <label for="file_embed">Link / Embed File</label>
+
+                            <input type="url"
+                                id="file_embed"
+                                name="file_embed"
+                                class="form-control @error('file_embed') is-invalid @enderror"
+                                value="{{ old('file_embed', $document->file_embed) }}"
+                                placeholder="https://...">
+
+                            @error('file_embed')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         {{-- Tipe Dokumen --}}
@@ -80,16 +151,37 @@
                         {{-- Unit --}}
                         <div class="form-group">
                             <label for="unit_id">Unit <span class="text-danger">*</span></label>
-                            <select id="unit_id" name="unit_id" 
-                                    class="form-control @error('unit_id') is-invalid @enderror" required>
-                                <option value="">-- Pilih Unit --</option>
-                                @foreach($units as $unit)
-                                    <option value="{{ $unit->id }}" 
-                                        {{ old('unit_id', $document->unit_id) == $unit->id ? 'selected' : '' }}>
-                                        {{ $unit->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+
+                            @if(auth()->user()->role === 'editor')
+                                {{-- Editor: unit otomatis & terkunci --}}
+
+                                <input type="hidden" name="unit_id" value="{{ auth()->user()->unit_id }}">
+
+                                <input type="text"
+                                    class="form-control"
+                                    value="{{ optional($units->firstWhere('id', auth()->user()->unit_id))->name }}"
+                                    readonly>
+                            @else
+                                {{-- Administrator: pilih manual --}}
+                                <select id="unit_id"
+                                        name="unit_id"
+                                        class="form-control @error('unit_id') is-invalid @enderror"
+                                        required>
+
+                                    <option value="">-- Pilih Unit --</option>
+
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}"
+                                            {{ old('unit_id', $document->unit_id) == $unit->id ? 'selected' : '' }}>
+                                            {{ $unit->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('unit_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            @endif
                         </div>
 
                         {{-- Tahun --}}
@@ -147,8 +239,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
-                        <input type="hidden" name="file_source" value="embed">
                     </div>
 
                     <div class="card-footer">
@@ -173,6 +263,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let titleFeedback = document.getElementById('title-feedback');
     let slugFeedback  = document.getElementById('slug-feedback');
     let slugEdited = false;
+
+    const uploadRadio = document.getElementById('source_upload');
+    const embedRadio  = document.getElementById('source_embed');
+    const uploadBox   = document.getElementById('upload-wrapper');
+    const embedBox    = document.getElementById('embed-wrapper');
 
     function slugify(text) {
         return text.toString().toLowerCase()
@@ -252,6 +347,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (metaDescInput) {
         updateCount(metaDescInput, 'meta_description_count', 160, 160);
     }
+
+    // Toggle Sumber Dokumen
+    function toggleSource() {
+        uploadBox.style.display = uploadRadio.checked ? '' : 'none';
+        embedBox.style.display  = embedRadio.checked ? '' : 'none';
+    }
+
+    uploadRadio.addEventListener('change', toggleSource);
+    embedRadio.addEventListener('change', toggleSource);
+
+    toggleSource(); // init
 });
 </script>
 @endpush

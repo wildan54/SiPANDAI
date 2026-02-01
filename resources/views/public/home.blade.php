@@ -58,9 +58,17 @@
           <!-- Footer -->
           <div class="mt-auto d-flex justify-content-end align-items-center">
             <div class="d-flex gap-2">
-              <a href="{{ route('public.documents.download', $doc->slug) }}" class="btn btn-sm btn-download">
-                <i class="bi bi-download"></i> Unduh
+          @if($doc->file_path)
+              <a href="{{ route('public.documents.download.file', $doc->slug) }}"
+                  class="btn btn-download">
+                  <i class="bi bi-download"></i>Unduh
               </a>
+          @elseif($doc->file_embed)
+              <a href="{{ route('public.documents.download.embed', $doc->slug) }}"
+                  class="btn btn-download">
+                  <i class="bi bi-download"></i>Unduh
+              </a>
+          @endif
               <a href="{{ route('public.documents.show', $doc->slug) }}" class="btn btn-sm btn-view">
                 <i class="bi bi-eye"></i> Lihat Detail
               </a>

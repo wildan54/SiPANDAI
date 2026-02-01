@@ -53,7 +53,9 @@
     <nav class="mt-2 flex-grow-1">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
-        <!-- Dashboard -->
+        {{-- ================= MENU UTAMA ================= --}}
+        <li class="nav-header text-white">MENU UTAMA</li>
+
         <li class="nav-item">
           <a href="{{ route('dashboard') }}" class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -61,7 +63,7 @@
           </a>
         </li>
 
-        <!-- Dokumen -->
+        {{-- Dokumen --}}
         <li class="nav-item {{ Request::routeIs('documents.*') ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ Request::routeIs('documents.*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-folder"></i>
@@ -72,29 +74,52 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ route('documents.index') }}" class="nav-link {{ Request::routeIs('documents.index') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i> Semua Dokumen
+              <a href="{{ route('documents.index') }}"
+                class="nav-link {{ Request::routeIs('documents.index') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-folder-open"></i>
+                <p>Semua Dokumen</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a href="{{ route('documents.create') }}" class="nav-link {{ Request::routeIs('documents.create') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i> Tambah Dokumen
+              <a href="{{ route('documents.drafts') }}"
+                class="nav-link {{ Request::routeIs('documents.drafts') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-pencil-alt"></i>
+                <p>Draf</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a href="{{ route('documents.categories.index') }}" class="nav-link {{ Request::routeIs('documents.category.*') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i> Kategori Dokumen
+              <a href="{{ route('documents.submitted') }}"
+                class="nav-link {{ Request::routeIs('documents.submitted') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-paper-plane"></i>
+                <p>Tersubmit</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a href="{{ route('documents.types.index') }}" class="nav-link {{ Request::routeIs('documents.type.*') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i> Tipe Dokumen
+              <a href="{{ route('documents.approved') }}"
+                class="nav-link {{ Request::routeIs('documents.approved') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-check-circle"></i>
+                <p>Disetujui</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a href="{{ route('documents.rejected') }}"
+                class="nav-link {{ Request::routeIs('documents.rejected') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-times-circle"></i>
+                <p>Ditolak</p>
+              </a>
+            </li>
+
           </ul>
         </li>
 
-        <!-- Bidang -->
+        {{-- ================= MASTER DATA ================= --}}
+        @if(auth()->user()->role === 'administrator')
+        <li class="nav-header text-white">MASTER DATA</li>
+
         <li class="nav-item">
           <a href="{{ route('bidang.index') }}" class="nav-link {{ Request::routeIs('bidang.*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-th-large"></i>
@@ -102,8 +127,20 @@
           </a>
         </li>
 
-        <!-- Pengguna -->
-        @if(auth()->user()->role === 'administrator')
+        <li class="nav-item">
+          <a href="{{ route('documents.categories.index') }}" class="nav-link {{ Request::routeIs('documents.categories.*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-tags"></i>
+            <p>Kategori Dokumen</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('documents.types.index') }}" class="nav-link {{ Request::routeIs('documents.types.*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-file-signature"></i>
+            <p>Tipe Dokumen</p>
+          </a>
+        </li>
+
         <li class="nav-item {{ Request::routeIs('users.*') ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ Request::routeIs('users.*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-users"></i>
@@ -127,15 +164,18 @@
         </li>
         @endif
 
-        <!-- Statistik -->
+        {{-- ================= MONITORING ================= --}}
         @if(auth()->user()->role === 'administrator')
+        <li class="nav-header text-white">MONITORING</li>
+
         <li class="nav-item">
-          <a href="{{ route('users.access_logs') }}" class="nav-link {{ Request::routeIs('access_logs') ? 'active' : '' }}">
-            <i class="fas fa-chart-bar"></i>
+          <a href="{{ route('users.access_logs.index') }}" class="nav-link {{ Request::routeIs('users.access_logs.index') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-chart-bar"></i>
             <p>Statistik Portal</p>
           </a>
         </li>
         @endif
+
       </ul>
     </nav>
 

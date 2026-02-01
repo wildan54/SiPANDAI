@@ -42,6 +42,7 @@
               <th>Pengguna</th> <!-- Gabungan foto + nama -->
               <th>Username</th>
               <th>Email</th>
+              <th>Unit</th>
               <th>Role</th>
               <th>Terakhir Aktif</th>
               <th>Dokumen</th>
@@ -68,6 +69,7 @@
 
               <td>{{ $user->username ?? '-' }}</td>
               <td>{{ $user->email }}</td>
+              <td>{{ $user->unit ? $units->firstWhere('id', $user->unit_id)->name : '-' }}</td>
               <td>{{ ucfirst($user->role) }}</td>
               <td>{{ $user->last_active ? $user->last_active->format('Y-m-d H:i') : '-' }}</td>
               <td>{{ $user->documents_count ?? 0 }}</td>
@@ -77,7 +79,8 @@
                   data-name="{{ $user->name }}"
                   data-username="{{ $user->username }}"
                   data-role="{{ $user->role }}"
-                  data-email="{{ $user->email }}">
+                  data-email="{{ $user->email }}"
+                  data-unit="{{ $user->unit_id ?? '-' }}">
                   Edit
               </button>
 

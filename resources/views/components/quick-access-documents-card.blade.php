@@ -1,7 +1,7 @@
 <div class="card card-custom p-3 mb-3">
     <div class="d-flex justify-content-between align-items-center">
         <h5 class="fw-bold mb-0">
-            {{ $title_1 ?? 'Dokumen ' . ($document->type->name ?? '') . ' Serupa' }}
+            {{ $title_1 }}
         </h5>
         @if(!empty($dropdown) && !empty($id))
             <button class="btn btn-sm btn-link text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $id }}">

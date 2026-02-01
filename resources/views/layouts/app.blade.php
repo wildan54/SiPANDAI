@@ -73,7 +73,7 @@
     lengthMenu: "Tampilkan _MENU_ data"
   },
   dom: '<"d-flex justify-content-between align-items-center mb-2"l<"ml-auto"f>>rt<"d-flex justify-content-between mt-2"i p>'
-});s
+});
 </script>
 @stack('scripts')
 </body>
