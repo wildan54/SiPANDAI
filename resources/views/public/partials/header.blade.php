@@ -10,9 +10,10 @@
   </div>
 
   <!-- Kanan: Search -->
-  <form action="{{ route('public.home') }}" method="GET" class="input-group search-box w-100 w-md-auto">
+  <form action="{{ route('public.documents.index') }}" method="GET" class="input-group search-box w-100 w-md-auto">
       <input type="text" name="q" class="form-control" 
             placeholder="Cari Cepat ...." value="{{ request('q') }}">
+
 
       <!-- Hidden fields -->
       @if(request('type'))

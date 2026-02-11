@@ -4,123 +4,126 @@
 
 @section('content')
 
-<!-- Judul Halaman -->
+<!-- ================= HEADER ================= -->
 <div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-sm-6">
-            <h4 class="fw-bold mb-3">
-                DETAIL <span class="text-warning">DOKUMEN</span>
-            </h4>
-        </div><!-- /.col -->
-        <div class="col-sm-6 text-sm-end">
-        <ol class="breadcrumb float-sm-end mb-0">
-            <li class="breadcrumb-item">
-            <a href="{{ route('public.home') }}" class="text-dark text-decoration-none fw-bold">
-                <i class="bi bi-house-door"></i> Home
-            </a>
-            </li>
-            <li class="breadcrumb-item active fw-bold" aria-current="page">
-                Detail Dokumen
-            </li>
-        </ol>
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-6">
+                <h4 class="fw-bold mb-3">
+                    DETAIL <span class="text-warning">DOKUMEN</span>
+                </h4>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+                <ol class="breadcrumb float-sm-end mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('public.home') }}" class="text-dark fw-bold text-decoration-none">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active fw-bold">Detail Dokumen</li>
+                </ol>
+            </div>
         </div>
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
+    </div>
 </div>
 
+<!-- ================= CONTENT ================= -->
+<div class="container-fluid">
 <div class="row">
-    <!-- Kolom Detail Dokumen -->
+
+    <!-- ===== KOLOM UTAMA ===== -->
     <div class="col-lg-8 mb-3">
         <div class="card card-custom p-4">
-            <div class="d-flex mb-3 align-items-start">
-                <i class="bi bi-file-earmark-text fs-2 me-3" style="color: #030F6B;"></i>
+
+            {{-- ================= HEADER DOKUMEN ================= --}}
+            < 
+            div class="d-flex align-items-start mb-3">
+                <i class="bi bi-file-earmark-text fs-2 me-3 text-primary"></i>
+
                 <div class="flex-grow-1">
-                    <!-- Judul -->
-                    <h3 class="mb-2 fw-bold text-break">{{ $document->title }}</h3>
+                    <h3 class="fw-bold text-break mb-2">
+                        {{ $document->title }}
+                    </h3>
 
-                    <!-- Badges: Unit, Tipe, Tahun -->
                     <div class="mb-2 d-flex flex-wrap gap-1">
-                        <span class="badge bg-light text-dark text-break">{{ $document->unit->name ?? '-' }}</span>
-                        <span class="badge bg-light text-dark text-break">{{ $document->type->name ?? '-' }}</span>
+                        <span class="badge bg-light text-dark">{{ $document->unit->name ?? '-' }}</span>
+                        <span class="badge bg-light text-dark">{{ $document->type->name ?? '-' }}</span>
                         <span class="badge bg-light text-dark">{{ $document->year }}</span>
-                    </div>
-
-                    @if ($document->file_path)
-                    <div class="embed-responsive embed-responsive-4by3 border rounded-lg">
-                    <iframe
-                        id="docEmbed"
-                        class="embed-responsive-item"
-                        src=""
-                        type="application/pdf"
-                        frameborder="0">
-                    </iframe>
-                    </div>
-                    @endif
-
-                    <!-- Kolom Detail Dokumen -->
-                    <div class="table-responsive mt-3">
-                        <table class="table table-bordered table-sm text-wrap">
-                            <tbody>
-                                <tr>
-                                    <th class="text-break">Tipe Dokumen</th>
-                                    <td class="text-break">{{ $document->type->name ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="text-break">Bidang</th>
-                                    <td class="text-break">{{ $document->unit->name ?? '-' }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="text-break">Tahun</th>
-                                    <td class="text-break">{{ $document->year }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Deskripsi -->
-                    <p class="small text-muted mb-2 text-break">{{ $document->description }}</p>
-
-                    <!-- Tanggal unggah + Tombol Aksi -->
-                    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
-                        <!-- Tanggal di kiri -->
-                        <small class="text-muted uploaded-text">
-                            Diunggah: {{ $document->upload_date->format('d/m/Y') }}
-                        </small>
-
-                        <!-- Tombol di kanan -->
-                        <div class="d-flex gap-2 flex-wrap">
-                        @if($document->file_path)
-                            <a href="{{ route('public.documents.download.file', $document->slug) }}"
-                                class="btn btn-download">
-                                <i class="bi bi-download"></i>Unduh
-                            </a>
-                        @elseif($document->file_embed)
-                            <a href="{{ route('public.documents.download.embed', $document->slug) }}"
-                                class="btn btn-download">
-                                <i class="bi bi-download"></i>Unduh
-                            </a>
-                        @endif
-                        @if($document->file_embed)
-                            <a href="{{ $document->file_embed }}" target="_blank" class="btn btn-secondary">
-                                <i class="bi bi-eye"></i> Lihat
-                            </a>
-                        @endif
-                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- <!-- Preview Dokumen -->
-            <div class="border rounded" style="height: 600px; width: 100%;">
-                <iframe id="docEmbed" width="100%" height="100%" frameborder="0"></iframe>
-            </div> --}}
+            {{-- ================= PREVIEW DOKUMEN (FULL WIDTH) ================= --}}
+            @if ($has_local_file)
+                <div class="document-preview-wrapper mb-4">
+                    <iframe
+                        class="document-preview"
+                        src="{{ $file_path }}#toolbar=0&navpanes=0&scrollbar=1&zoom=page-width"
+                        frameborder="0"
+                        loading="lazy">
+                    </iframe>
+                </div>
+            @endif
+
+            {{-- ================= DETAIL ================= --}}
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <th width="30%">Tipe Dokumen</th>
+                            <td>{{ $document->type->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Bidang</th>
+                            <td>{{ $document->unit->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tahun</th>
+                            <td>{{ $document->year }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- ================= DESKRIPSI ================= --}}
+            <p class="small text-muted text-break">
+                {{ $document->description }}
+            </p>
+
+            {{-- ================= FOOTER ================= --}}
+            <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
+                <small class="text-muted uploaded-text">
+                    Diunggah:
+                    {{ optional($document->created_at)->format('d/m/Y') }}
+                </small>
+
+                <div class="d-flex gap-2 flex-wrap">
+                    @if($document->file_path)
+                        <a href="{{ route('public.documents.download.file', $document->slug) }}"
+                           class="btn btn-warning btn-sm">
+                            <i class="bi bi-download"></i> Unduh
+                        </a>
+                    @elseif($document->file_embed)
+                        <a href="{{ route('public.documents.download.embed', $document->slug) }}"
+                           class="btn btn-warning btn-sm">
+                            <i class="bi bi-download"></i> Unduh
+                        </a>
+                    @endif
+
+                    @if($document->file_embed)
+                        <a href="{{ $document->file_embed }}" target="_blank"
+                           class="btn btn-secondary btn-sm">
+                            <i class="bi bi-eye"></i> Lihat
+                        </a>
+                    @endif
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- Kolom Quick Access Dokumen Lainnya -->
+    <!-- ===== SIDEBAR ===== -->
     <div class="col-lg-4">
-        {{-- Dokumen serupa --}}
         @include('components.quick-access-documents-card', [
             'documents' => $otherDocuments,
             'title_1' => 'Tipe Dokumen '.$document->type->name.' Lainnya',
@@ -128,60 +131,49 @@
             'id' => 'collapseSimilarDocs'
         ])
 
-        {{-- Tipe dokumen dalam kategori yg sama --}}
         @include('components.quick-access-types-card', [
             'types' => $sameCategoryTypes,
-            'title' => 'Kategori '.$document->type->category->name. ' Lainnya',
+            'title' => 'Kategori '.$document->type->category->name.' Lainnya',
             'id' => 'collapseCategoryDocs'
         ])
     </div>
+
 </div>
 </div>
+@endsection
 
-<!-- Script Embed Dokumen -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    let embedLink = @json($document->file_embed);
-
-    // Jika link dari Google Drive → ubah ke /preview
-    if (embedLink.includes("drive.google.com")) {
-        const match = embedLink.match(/\/d\/(.*?)\//);
-        if (match && match[1]) {
-            const fileId = match[1];
-            embedLink = `https://drive.google.com/file/d/${fileId}/preview`;
-        }
-    }
-
-    // Jika dari Nextcloud → pastikan pakai /download
-    if (embedLink.includes("nextcloud")) {
-        if (!embedLink.endsWith("/download")) {
-            embedLink = embedLink.replace(/\/+$/, "") + "/download";
-        }
-    }
-
-    // Tambahkan toolbar=0 supaya minimalis
-    document.getElementById("docEmbed").src = embedLink + "#toolbar=0";
-});
-</script>
-
-
-<!-- Custom Style untuk card -->
+@push('styles')
 <style>
-.card-custom h3,
-.card-custom p,
-.card-custom span,
-.card-custom td,
-.card-custom th {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
+.document-preview-wrapper {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9fafb;
 }
 
-/* Kecilkan tulisan "Diunggah" di mobile */
+.document-preview {
+    display: block;
+    width: 100%;
+    height: 100vh;      /* iframe benar-benar besar */
+    min-height: 900px; /* aman untuk dokumen panjang */
+}
+
+.card-custom * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
 @media (max-width: 576px) {
-  .uploaded-text {
-    font-size: 0.75rem; /* lebih kecil dari small (0.875rem) */
-  }
+    .uploaded-text {
+        font-size: 0.75rem;
+    }
+
+    .document-preview {
+        height: 80vh;
+        min-height: 600px;
+    }
 }
 </style>
-@endsection
+@endpush

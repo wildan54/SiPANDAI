@@ -1,13 +1,13 @@
 <!-- Tag Kategori -->
 <div class="nav-tag mb-4">
   <label class="form-label small">Pilih Kategori </label>
-  <a href="{{ route('public.home') }}" 
+  <a href="{{ route('public.documents.index') }}" 
      class="btn btn-sm {{ request('category') ? 'btn-outline-secondary' : 'text-dark' }}" 
      style="{{ request('category') ? '' : 'background-color:#FEBC2F; border-color:#FEBC2F;' }}">
      Semua
   </a>
   @foreach($categories as $category)
-    <a href="{{ route('public.home', array_merge(request()->except('page'), ['category' => $category->slug])) }}" 
+    <a href="{{ route('public.documents.index', array_merge(request()->except('page'), ['category' => $category->slug])) }}" 
        class="btn btn-sm {{ request('category') == $category->slug ? 'text-dark' : 'btn-outline-secondary' }}"
        style="{{ request('category') == $category->slug ? 'background-color:#FEBC2F; border-color:#FEBC2F;' : '' }}">
        {{ $category->name }}
@@ -16,7 +16,7 @@
 </div>
 
 <!-- Form Filter -->
-<form action="{{ route('public.home') }}" method="GET" class="mb-3">
+<form action="{{ route('public.documents.index') }}" method="GET" class="mb-3">
   <div class="row g-2 align-items-end">
 
     <!-- Tipe Dokumen -->
@@ -74,7 +74,7 @@
       <button class="btn text-dark w-100" style="background-color:#FEBC2F; border-color:#FEBC2F;">
         Filter
       </button>
-      <a href="{{ route('public.home') }}" class="btn btn-outline-secondary w-100">
+      <a href="{{ route('public.documents.index') }}" class="btn btn-outline-secondary w-100">
         Reset
       </a>
     </div>
@@ -88,7 +88,7 @@
 @endphp
 
 @if($filters->isNotEmpty())
-  <div class="alert alert-warning mt-3 p-2">
+  <div class="alert alert-info mt-3 p-2">
     <small>
       <i class="bi bi-funnel"></i> Filter sedang aktif: 
       @foreach($filters as $key => $value)

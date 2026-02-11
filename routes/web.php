@@ -9,6 +9,7 @@ use App\Http\Controllers\Administrator\UnitController;
 use App\Http\Controllers\Administrator\DocumentTypeController;
 use App\Http\Controllers\Administrator\UserController;
 use App\Http\Controllers\Administrator\DocumentCategoryController;
+use App\Http\Controllers\Publik\HomeController;
 use App\Http\Controllers\Publik\DocumentController as PublicDocumentController;
 
 // Refresh captcha publik (tidak perlu login)
@@ -102,16 +103,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // ====================================================
 
 // Halaman utama publik (daftar dokumen + filter)
-Route::get('/home', [PublicDocumentController::class, 'index'])->name('public.home');
-Route::get('/', [PublicDocumentController::class, 'landingPage'])->name('public.landing-page');
+Route::get('/', [HomeController::class, 'index'])->name('public.home');
+
 
 // Halaman publik dokumen
 Route::prefix('dokumen')->name('public.documents.')->group(function () {
-    // Download
-
-    Route::get('/dokumen/{slug}/download-file', [PublicDocumentController::class, 'downloadFileUpload'])->name('download.file');
-
-    Route::get('/dokumen/{slug}/download-embed', [PublicDocumentController::class, 'downloadEmbed'])->name('download.embed');
+    Route::get('/', [PublicDocumentController::class, 'index'])->name('index');
 
     // By Type
     Route::get('/type/{slug}', [PublicDocumentController::class, 'types'])->name('types');
@@ -119,11 +116,19 @@ Route::prefix('dokumen')->name('public.documents.')->group(function () {
     // By Category
     Route::get('/category/{slug}', [PublicDocumentController::class, 'categories'])->name('categories');
 
+    Route::get('/search', [HomeController::class, 'search'])->name('search');
+
     // By Unit
     Route::get('/unit/{slug}', [PublicDocumentController::class, 'units'])->name('units');
 
     // Detail dokumen
     Route::get('/{slug}', [PublicDocumentController::class, 'show'])->name('show');
+
+    // Download
+
+    Route::get('/{slug}/download-file', [PublicDocumentController::class, 'downloadFileUpload'])->name('download.file');
+
+    Route::get('/{slug}/download-embed', [PublicDocumentController::class, 'downloadEmbed'])->name('download.embed');
 });
 
    Route::get('/monitoring', function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Publik;
 
 use App\Models\Unit;
 use App\Models\Document;
+use Illuminate\Support\Str;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use App\Models\DocumentCategory;
@@ -22,6 +23,8 @@ class DocumentController extends Controller
         AccessLogService::log('view');
 
         $query = Document::public()->with(['type', 'unit']);
+
+        $from = $request->get('from'); // hero | null
 
         // 🔍 Pencarian keyword
         if ($request->filled('q')) {
@@ -93,54 +96,8 @@ class DocumentController extends Controller
         // Pagination hasil
         $documents = $query->paginate(12)->withQueryString();
 
-        return view('public.home', compact(
+        return view('public.documents', compact(
             'documents', 'categories', 'types', 'units', 'years', 'activeFilters'
-        ));
-    }
-
-    public function landingPage()
-    {
-        // Data dummy untuk testing tampilan
-        $total_documents = 1250;
-        $total_units = 42;
-        $total_downloads = "8.2k";
-
-        // Mockup Kategori
-        $featured_categories = collect([
-            (object)['name' => 'Informasi Berkala', 'slug' => 'berkala', 'documents_count' => 150],
-            (object)['name' => 'Informasi Serta Merta', 'slug' => 'serta-merta', 'documents_count' => 45],
-            (object)['name' => 'Tersedia Setiap Saat', 'slug' => 'setiap-saat', 'documents_count' => 320],
-            (object)['name' => 'Regulasi & Hukum', 'slug' => 'regulasi', 'documents_count' => 88],
-        ]);
-
-        // Mockup Dokumen Terbaru
-        $latest_documents = collect([
-            (object)[
-                'title' => 'Laporan Realisasi Anggaran Triwulan III Tahun 2025',
-                'slug' => 'laporan-anggaran-q3-2025',
-                'created_at' => now()->subHours(2),
-                'unit' => (object)['name' => 'Sekretariat']
-            ],
-            (object)[
-                'title' => 'Rencana Strategis (Renstra) Instansi Periode 2024-2029',
-                'slug' => 'renstra-2024-2029',
-                'created_at' => now()->subDay(),
-                'unit' => (object)['name' => 'Perencanaan']
-            ],
-            (object)[
-                'title' => 'SOP Standar Pelayanan Informasi Publik v.2.0',
-                'slug' => 'sop-ppid-2025',
-                'created_at' => now()->subDays(3),
-                'unit' => (object)['name' => 'Humas']
-            ],
-        ]);
-
-        return view('public.landing-page', compact(
-            'total_documents', 
-            'total_units', 
-            'total_downloads', 
-            'featured_categories', 
-            'latest_documents'
         ));
     }
 
@@ -154,12 +111,12 @@ class DocumentController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // Log guest atau user melihat dokumen
+        // Log view
         AccessLogService::log('view', $document);
 
         $otherDocuments = Document::where('id', '!=', $document->id)
             ->where('document_type_id', $document->document_type_id)
-            ->orderBy('year', 'asc') // urut berdasarkan kolom year
+            ->orderBy('year', 'asc')
             ->take(4)
             ->get();
 
@@ -168,12 +125,22 @@ class DocumentController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
+        // ===== PREVIEW ONLY LOCAL FILE =====
+        $filePath = $document->file_path
+            ? asset('storage/' . $document->file_path)
+            : null;
+
         return view('public.documents.show', [
-            'document' => $document,
+            'document'          => $document,
+            'otherDocuments'    => $otherDocuments,
             'sameCategoryTypes' => $sameCategoryTypes,
-            'otherDocuments' => $otherDocuments
+
+            // preview config
+            'file_path'        => $filePath,
+            'has_local_file'   => !empty($document->file_path),
         ]);
     }
+
 
     /**
      * Download dokumen
