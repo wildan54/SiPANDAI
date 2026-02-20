@@ -35,9 +35,8 @@
     <div class="col-lg-8 mb-3">
         <div class="card card-custom p-4">
 
-            {{-- ================= HEADER DOKUMEN ================= --}}
-            < 
-            div class="d-flex align-items-start mb-3">
+            <!-- HEADER DOKUMEN -->
+            <div class="d-flex align-items-start mb-3">
                 <i class="bi bi-file-earmark-text fs-2 me-3 text-primary"></i>
 
                 <div class="flex-grow-1">
@@ -53,19 +52,27 @@
                 </div>
             </div>
 
-            {{-- ================= PREVIEW DOKUMEN (FULL WIDTH) ================= --}}
-            @if ($has_local_file)
+            {{-- ================= PREVIEW ================= --}}
+            @if($has_local_file || $embed_link)
+
                 <div class="document-preview-wrapper mb-4">
                     <iframe
                         class="document-preview"
-                        src="{{ $file_path }}#toolbar=0&navpanes=0&scrollbar=1&zoom=page-width"
+                        src="{{ $has_local_file 
+                                ? route('public.documents.preview', $document->slug) 
+                                : $embed_link }}"
                         frameborder="0"
-                        loading="lazy">
+                        loading="lazy"
+                        width="100%" 
+                        height="500px"
+                        style="border:none;">
+                        
                     </iframe>
                 </div>
+
             @endif
 
-            {{-- ================= DETAIL ================= --}}
+            <!-- DETAIL TABLE -->
             <div class="table-responsive">
                 <table class="table table-bordered table-sm">
                     <tbody>
@@ -85,12 +92,14 @@
                 </table>
             </div>
 
-            {{-- ================= DESKRIPSI ================= --}}
+            <!-- DESKRIPSI -->
+            @if($document->description)
             <p class="small text-muted text-break">
                 {{ $document->description }}
             </p>
+            @endif
 
-            {{-- ================= FOOTER ================= --}}
+            <!-- FOOTER -->
             <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
                 <small class="text-muted uploaded-text">
                     Diunggah:
@@ -98,6 +107,7 @@
                 </small>
 
                 <div class="d-flex gap-2 flex-wrap">
+
                     @if($document->file_path)
                         <a href="{{ route('public.documents.download.file', $document->slug) }}"
                            class="btn btn-warning btn-sm">
@@ -142,6 +152,7 @@
 </div>
 @endsection
 
+
 @push('styles')
 <style>
 .document-preview-wrapper {
@@ -155,8 +166,8 @@
 .document-preview {
     display: block;
     width: 100%;
-    height: 100vh;      /* iframe benar-benar besar */
-    min-height: 900px; /* aman untuk dokumen panjang */
+    height: 85vh;
+    min-height: 800px;
 }
 
 .card-custom * {
@@ -171,8 +182,8 @@
     }
 
     .document-preview {
-        height: 80vh;
-        min-height: 600px;
+        height: 70vh;
+        min-height: 500px;
     }
 }
 </style>

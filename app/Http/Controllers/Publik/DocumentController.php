@@ -124,20 +124,39 @@ class DocumentController extends Controller
             ->where('document_category_id', $document->type->document_category_id)
             ->orderBy('name', 'asc')
             ->get();
-
-        // ===== PREVIEW ONLY LOCAL FILE =====
-        $filePath = $document->file_path
-            ? asset('storage/' . $document->file_path)
-            : null;
+        
 
         return view('public.documents.show', [
             'document'          => $document,
             'otherDocuments'    => $otherDocuments,
             'sameCategoryTypes' => $sameCategoryTypes,
 
-            // preview config
-            'file_path'        => $filePath,
-            'has_local_file'   => !empty($document->file_path),
+            // preview flags
+            'has_local_file' => !empty($document->file_path),
+            'embed_link'     => $document->file_embed,
+        ]);
+    }
+
+    public function preview($slug)
+    {
+        $document = Document::where('slug', $slug)->firstOrFail();
+
+        if (!$document->file_path) {
+            abort(404, 'File tidak tersedia');
+        }
+
+        if (!Storage::disk('public')->exists($document->file_path)) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        $path = storage_path('app/public/' . $document->file_path);
+
+        return response()->make(file_get_contents($path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$document->title.'.pdf"',
+            'X-Frame-Options' => 'ALLOWALL',
+            'Content-Length' => filesize($path),
+            'Accept-Ranges' => 'bytes',
         ]);
     }
 

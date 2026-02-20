@@ -93,7 +93,9 @@ class DocumentController extends Controller
             ? Document::whereNotNull('year')->select('year')->distinct()->orderByDesc('year')->pluck('year')
             : collect();
 
-        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
+        $currentStatus = 'all';
+
+        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years', 'currentStatus'));
     }
 
 
@@ -478,18 +480,27 @@ class DocumentController extends Controller
      */
     public function submit(Document $document)
     {
-        // VALIDASI WAJIB (PALING ATAS)
-        abort_unless(auth()->user()->role === 'editor', 403);
+        $user = auth()->user();
+
+        // ✅ Role boleh editor & administrator
+        abort_unless(in_array($user->role, ['editor', 'administrator']), 403);
+
+        // ✅ Status harus draft/rejected
         abort_unless(in_array($document->status, ['draft', 'rejected']), 403);
+
+        // ✅ Editor hanya boleh unit sendiri
+        if ($user->role === 'editor') {
+            abort_unless($document->unit_id === $user->unit_id, 403);
+        }
 
         AccessLogService::log('submit', $document);
 
-        // Update status dokumen
+        // update status
         $document->update([
             'status' => 'submitted',
         ]);
 
-        // Simpan riwayat approval
+        // approval history
         DocumentApproval::create([
             'document_id' => $document->id,
             'reviewed_by' => auth()->id(),
@@ -500,10 +511,12 @@ class DocumentController extends Controller
         return back()->with('success', 'Dokumen berhasil disubmit.');
     }
 
-
     public function bulkSubmit(Request $request)
     {
-        abort_unless(Auth::user()->role === 'editor', 403);
+        $user = Auth::user();
+
+        // ✅ Role boleh editor & administrator
+        abort_unless(in_array($user->role, ['editor', 'administrator']), 403);
 
         $ids = $request->document_ids;
 
@@ -513,19 +526,22 @@ class DocumentController extends Controller
 
         $documents = Document::whereIn('id', $ids)
             ->whereIn('status', ['draft', 'rejected'])
+
+            // ✅ Editor hanya unit sendiri
+            ->when($user->role === 'editor', function ($q) use ($user) {
+                $q->where('unit_id', $user->unit_id);
+            })
+
             ->get();
 
         foreach ($documents as $document) {
 
-            // update status
             $document->update([
                 'status' => 'submitted',
             ]);
 
-            // access log (PER DOKUMEN)
             AccessLogService::log('submit', $document);
 
-            // approval history (konsisten dengan submit single)
             DocumentApproval::create([
                 'document_id' => $document->id,
                 'reviewed_by' => auth()->id(),
@@ -536,7 +552,6 @@ class DocumentController extends Controller
 
         return back()->with('success', "{$documents->count()} dokumen berhasil disubmit.");
     }
-
 
     /**
      * Approve dokumen (Role ADMIN)
@@ -695,8 +710,10 @@ class DocumentController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
+        $currentStatus = 'approved';
 
-        return view('documents.index', compact('documents','documentTypes', 'units', 'years'));
+
+        return view('documents.index', compact('documents','documentTypes', 'units', 'years', 'currentStatus'));
     }
 
     public function rejectedDocuments(Request $request)
@@ -727,7 +744,9 @@ class DocumentController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
+        $currentStatus = 'rejected';
+
+        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years', 'currentStatus'));
     }
 
     public function draftDocuments(Request $request)
@@ -754,7 +773,9 @@ class DocumentController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
+        $currentStatus = 'draft';
+
+        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years', 'currentStatus'));
     }
 
     public function submittedDocuments(Request $request)
@@ -780,7 +801,9 @@ class DocumentController extends Controller
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');
+        
+        $currentStatus = 'submitted';
 
-        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years'));
+        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years', 'currentStatus'));
     }
 }

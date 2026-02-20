@@ -64,20 +64,16 @@ class HomeController extends Controller
          */
         $legalBases = [
             1 => [ // id document_types
-                'UU No. 14 Tahun 2008 Pasal 9',
-                'Perki No. 1 Tahun 2021 Pasal 13',
+                
             ],
             2 => [
-                'UU No. 14 Tahun 2008 Pasal 10',
-                'Perki No. 1 Tahun 2021 Pasal 14',
+                
             ],
             3 => [
-                'UU No. 14 Tahun 2008 Pasal 11',
-                'Perki No. 1 Tahun 2021 Pasal 15',
+                
             ],
             4 => [
-                'UU No. 14 Tahun 2008',
-                'Perki No. 1 Tahun 2021',
+                
             ],
         ];
 

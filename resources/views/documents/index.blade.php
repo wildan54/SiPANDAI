@@ -30,7 +30,7 @@
         <i class="fas fa-plus mr-1"></i> Tambah Dokumen
       </a>
 
-      @if(auth()->user()->role === 'administrator')
+      @if(auth()->user()->role === 'administrator' && in_array($currentStatus, ['submitted']))
         <span id="selectedCount" class="text-muted ml-2">(0 dokumen dipilih)</span>
 
         <button id="btnApproveSelected" class="btn btn-success" disabled>
@@ -42,7 +42,7 @@
         </button>
       @endif
 
-      @if(auth()->user()->role === 'editor')
+      @if(in_array(auth()->user()->role, ['editor','administrator']) && in_array($currentStatus, ['draft','rejected']))
         <span id="selectedCount" class="text-muted ml-2">(0 dokumen dipilih)</span>
         <button id="btnSubmitSelected" class="btn btn-warning text-white" disabled>
           <i class="fas fa-paper-plane mr-1"></i> Submit

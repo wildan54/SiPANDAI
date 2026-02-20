@@ -12,7 +12,7 @@ export default defineConfig({
     host: 'sipandai_project.test',
     port: 5173,
     hmr: {
-            host: 'sipandai_project.test',
+            host: 'sipandai.devwilz.com',
         },
     },
 

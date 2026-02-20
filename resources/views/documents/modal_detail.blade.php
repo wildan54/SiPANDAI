@@ -70,8 +70,9 @@ $(function () {
     // Klik tombol eye
     $(document).on('click', '.showDocument', function () {
         let id = $(this).data('id');
+        
+        $.get("/admin/dokumen/" + id, function (data) {
 
-        $.get("{{ url('admin/dokumen') }}/" + id, function (data) {
 
               $('#docTitle').text(data.title.toUpperCase());
 

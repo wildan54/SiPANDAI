@@ -130,7 +130,7 @@
 {{-- ================= DOKUMEN TERBARU ================= --}}
 <section class="py-5 bg-white">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end gap-3 mb-4">
             <div>
                 <h2 class="fw-bold text-primary">
                     Terbaru Ditambahkan
@@ -181,7 +181,7 @@
          <!-- Grid Dokumen -->  
         <div class="row">
             @forelse($latest_documents as $doc)
-            <div class="col-md-6 col-lg-6 mb-4">
+            <div class="col-12 col-md-6 mb-4">
                 <div class="card card-custom p-3 h-100 d-flex flex-column">
 
                 <!-- Icon + Konten -->
@@ -346,6 +346,115 @@
 .fw-bold.text-primary {
     color: #030F6B !important;
 }
+
+/* ============================= */
+/* FINAL MOBILE RESPONSIVE FIX  */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+    /* HERO */
+    .hero-section {
+        min-height: auto;
+        padding: 3rem 1rem;
+        text-align: center;
+    }
+
+    .hero-section h1 {
+        font-size: 1.6rem;
+        line-height: 1.4;
+    }
+
+    .hero-section .lead {
+        font-size: 0.95rem;
+    }
+
+    .hero-icon {
+        display: none;
+    }
+
+    /* SEARCH */
+    .search-wrapper {
+        width: 100% !important;
+    }
+
+    .input-group-lg > .form-control,
+    .input-group-lg > .input-group-text,
+    .input-group-lg > .btn {
+        padding: 0.7rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-search {
+        padding: 0.6rem 1rem;
+    }
+
+    /* POPULAR BADGE */
+    .badge-popular {
+        display: inline-block;
+        margin-bottom: .4rem;
+    }
+
+    /* STATISTIK */
+    .stat-section {
+        margin-top: -15px;
+        padding: 1.5rem 0;
+    }
+
+    .stat-section h3 {
+        font-size: 1.4rem;
+    }
+
+    .stat-section small {
+        font-size: 0.8rem;
+    }
+
+    /* CARD DOKUMEN */
+    .card-custom {
+        padding: 1rem !important;
+    }
+
+    .card-custom .d-flex {
+        flex-direction: column;
+        gap: .75rem;
+    }
+
+    .card-custom .mt-auto {
+        justify-content: flex-start !important;
+    }
+
+    .btn-download,
+    .btn-view {
+        font-size: 0.8rem;
+        padding: 0.45rem 0.7rem;
+    }
+
+}
+
+/* Extra small device improvement */
+@media (max-width: 576px) {
+
+    .search-wrapper {
+        width: 100%;
+    }
+
+    .input-group-lg .form-control {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.75rem;
+    }
+
+    .input-group-lg .input-group-text {
+        padding: 0.7rem;
+    }
+
+    .btn-search {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+        white-space: nowrap;
+    }
+
+}
+
 </style>
 
 {{-- ================= TOOLTIP INIT ================= --}}

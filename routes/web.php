@@ -129,6 +129,9 @@ Route::prefix('dokumen')->name('public.documents.')->group(function () {
     Route::get('/{slug}/download-file', [PublicDocumentController::class, 'downloadFileUpload'])->name('download.file');
 
     Route::get('/{slug}/download-embed', [PublicDocumentController::class, 'downloadEmbed'])->name('download.embed');
+
+    Route::get('/dokumen/{slug}/preview', [PublicDocumentController::class, 'preview'])->name('preview');
+
 });
 
    Route::get('/monitoring', function () {
