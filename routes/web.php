@@ -105,7 +105,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Halaman utama publik (daftar dokumen + filter)
 Route::get('/', [HomeController::class, 'index'])->name('public.home');
 
-
 // Halaman publik dokumen
 Route::prefix('dokumen')->name('public.documents.')->group(function () {
     Route::get('/', [PublicDocumentController::class, 'index'])->name('index');

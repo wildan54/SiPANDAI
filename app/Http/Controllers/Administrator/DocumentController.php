@@ -29,31 +29,19 @@ class DocumentController extends Controller
     {
         $user = auth()->user();
 
-        // =========================
-        // QUERY DOKUMEN
-        // =========================
         $documents = Document::with(['type', 'unit', 'uploader'])
 
-            // 🔐 Editor WAJIB hanya unit sendiri
             ->when($user->role === 'editor', function ($q) use ($user) {
                 $q->where('unit_id', $user->unit_id);
             })
 
-            // =========================
-            // FILTER TIPE (SEMUA ROLE)
-            // =========================
             ->when(
                 $request->filled('type'),
                 fn ($q) => $q->whereHas('type', function ($qq) use ($request) {
                     $qq->where('slug', $request->type);
                 })
             )
-            
 
-
-            // =========================
-            // FILTER KHUSUS ADMIN
-            // =========================
             ->when(
                 $user->role === 'administrator' && $request->filled('unit'),
                 fn ($q) => $q->whereHas('unit', function ($qq) use ($request) {
@@ -66,38 +54,43 @@ class DocumentController extends Controller
                 fn ($q) => $q->where('year', $request->year)
             )
 
-            // =========================
-            // SEARCH
-            // =========================
             ->when($request->filled('q'), function ($q) use ($request) {
                 $q->where(function ($qq) use ($request) {
                     $qq->where('title', 'like', "%{$request->q}%")
-                    ->orWhere('description', 'like', "%{$request->q}%")
-                    ->orWhere('slug', 'like', "%{$request->q}%");
+                        ->orWhere('description', 'like', "%{$request->q}%")
+                        ->orWhere('slug', 'like', "%{$request->q}%");
                 });
             })
 
             ->latest('upload_date')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString(); // <-- ini yang membuat filter tetap saat pagination
 
 
-        // =========================
-        // DATA FILTER
-        // =========================
         $documentTypes = DocumentType::orderBy('name')->get();
+
         $units = $user->role === 'administrator'
             ? Unit::orderBy('name')->get()
             : collect();
 
         $years = $user->role === 'administrator'
-            ? Document::whereNotNull('year')->select('year')->distinct()->orderByDesc('year')->pluck('year')
+            ? Document::whereNotNull('year')
+                ->select('year')
+                ->distinct()
+                ->orderByDesc('year')
+                ->pluck('year')
             : collect();
 
         $currentStatus = 'all';
 
-        return view('documents.index', compact('documents', 'documentTypes', 'units', 'years', 'currentStatus'));
+        return view('documents.index', compact(
+            'documents',
+            'documentTypes',
+            'units',
+            'years',
+            'currentStatus'
+        ));
     }
-
 
 
     /**

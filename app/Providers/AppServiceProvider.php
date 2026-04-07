@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-    Paginator::useBootstrapFive(); // biar pagination sesuai Bootstrap 5
+        Paginator::useBootstrapFive(); // pagination Bootstrap 5
 
+        if (config('app.env') !== 'local') {
+            URL::forceScheme('https');
+        }
     }
 }

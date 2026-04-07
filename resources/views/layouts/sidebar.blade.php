@@ -174,6 +174,15 @@
             <p>Statistik Portal</p>
           </a>
         </li>
+
+        <li class="nav-header text-white">PENGATURAN</li>
+
+        <li class="nav-item">
+          <a href="{{ route('users.access_logs.index') }}" class="nav-link {{ Request::routeIs('users.access_logs.index') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-solid fa-wrench"></i>
+            <p>Maintenance</p>
+          </a>
+        </li>
         @endif
 
       </ul>

@@ -1,6 +1,44 @@
 @extends('layouts.app')
 
-@section('title', 'Semua Dokumen')
+@php
+  $statusMap = [
+    'approved'  => [
+      'label' => 'Disetujui',
+      'class' => 'success',
+      'icon'  => 'check-circle',
+      'title' => 'Dokumen Disetujui',
+    ],
+    'rejected'  => [
+      'label' => 'Ditolak',
+      'class' => 'danger',
+      'icon'  => 'times-circle',
+      'title' => 'Dokumen Ditolak',
+    ],
+    'submitted' => [
+      'label' => 'Menunggu',
+      'class' => 'warning',
+      'icon'  => 'clock',
+      'title' => 'Dokumen Menunggu Persetujuan',
+    ],
+    'draft'     => [
+      'label' => 'Draf',
+      'class' => 'secondary',
+      'icon'  => 'file-alt',
+      'title' => 'Dokumen Draft',
+    ],
+  ];
+
+  $currentConfig = $statusMap[$currentStatus] ?? [
+    'label' => 'Unknown',
+    'class' => 'secondary',
+    'icon'  => 'question-circle',
+    'title' => 'Semua Dokumen',
+  ];
+
+  $pageTitle = $currentConfig['title'];
+@endphp
+
+@section('title', $pageTitle)
 
 @section('content')
 <!-- Content Header -->
@@ -8,12 +46,13 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Dokumen</h1>
+        <h1 class="m-0">{{ $pageTitle }}</h1>
+        
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-          <li class="breadcrumb-item active">Dokumen</li>
+          <li class="breadcrumb-item active">{{ $pageTitle }}</li>
         </ol>
       </div>
     </div>
@@ -138,17 +177,13 @@
 
               <td>
                 @php
-                  $map = [
-                    'approved' => ['Disetujui','success','check-circle'],
-                    'rejected' => ['Ditolak','danger','times-circle'],
-                    'submitted'=> ['Menunggu','warning','clock'],
-                    'draft'    => ['Draf','secondary','file-alt'],
-                  ];
-                  [$label,$class,$icon] = $map[$doc->status] ?? $map['draft'];
+                  $conf = $statusMap[$doc->status] ?? $statusMap['draft'];
                   $visibility = $doc->visibility === 'public' ? 'Publik' : 'Privat';
                 @endphp
-                <span class="badge badge-{{ $class }}">
-                  <i class="fas fa-{{ $icon }} mr-1"></i>{{ $label }} · {{ $visibility }}
+
+                <span class="badge badge-{{ $conf['class'] }}">
+                  <i class="fas fa-{{ $conf['icon'] }} mr-1"></i>
+                  {{ $conf['label'] }} · {{ $visibility }}
                 </span>
               </td>
 
