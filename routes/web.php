@@ -9,6 +9,7 @@ use App\Http\Controllers\Administrator\UnitController;
 use App\Http\Controllers\Administrator\DocumentTypeController;
 use App\Http\Controllers\Administrator\UserController;
 use App\Http\Controllers\Administrator\DocumentCategoryController;
+use App\Http\Controllers\Administrator\BackupController;
 use App\Http\Controllers\Publik\HomeController;
 use App\Http\Controllers\Publik\DocumentController as PublicDocumentController;
 
@@ -91,10 +92,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/statistik/{user}', [AccessLogController::class, 'show'])->name('access_logs.detail');
     });
 
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::prefix(('admin/profil'))->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('admin/backup')->name('backup.')->group(function () {
+        Route::get('/', [BackupController::class, 'index'])->name('index');
+        Route::post('/run', [BackupController::class, 'run'])->name('run');
+        Route::get('/download/{file}', [BackupController::class, 'download'])->name('download');
+        Route::delete('/delete/{file}', [BackupController::class, 'delete'])->name('delete');
+    });
 });
 
 

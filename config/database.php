@@ -60,8 +60,15 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
-        ],
 
+            'dump' => [
+                'dump_binary_path' => 'C:\\laragon\\bin\\mysql\\mysql-8.4.3-winx64\\bin\\',
+                'use_single_transaction' => true,
+                'timeout' => 300,
+                'add_extra_option' => '--host=127.0.0.1 --port=3306 --user=root',
+
+            ],
+        ],
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

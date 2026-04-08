@@ -178,9 +178,9 @@
         <li class="nav-header text-white">PENGATURAN</li>
 
         <li class="nav-item">
-          <a href="{{ route('users.access_logs.index') }}" class="nav-link {{ Request::routeIs('users.access_logs.index') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-solid fa-wrench"></i>
-            <p>Maintenance</p>
+          <a href="{{ route('backup.index') }}" class="nav-link {{ Request::routeIs('backup.*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-database"></i>
+            <p>Backup Data</p>
           </a>
         </li>
         @endif
