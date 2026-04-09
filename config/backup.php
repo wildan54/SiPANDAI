@@ -23,7 +23,7 @@ return [
     'source' => [
         'files' => [
             'include' => [
-                storage_path('app'),
+                base_path(),
             ],
 
             'exclude' => [
